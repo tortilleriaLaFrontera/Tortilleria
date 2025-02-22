@@ -26,17 +26,9 @@
     
 }
 .boton-base {
-    cursor: pointer;
-    color: var(--btn-text-clr);
-    background-color: var(--btn-clr);
-    padding: 20px;
-    text-align: center;
     display: inline-block;
-    border-radius: 20px;
-    transition-duration: 0.2s;
     box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.308);
 }
 .boton-base:hover {
-    background-color: var(--btn-hover-clr);
     box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.23);
 }

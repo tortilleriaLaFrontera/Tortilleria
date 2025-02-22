@@ -20,6 +20,20 @@ body{
     min-height: 97vh;
     
 }
+button {
+    cursor: pointer;
+    color: var(--btn-text-clr);
+    background-color: var(--btn-clr);
+    padding: 20px;
+    text-align: center;
+    /* display: inline-block; */
+    border-radius: 20px;
+    transition-duration: 0.2s;
+    /* box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.308); */
+}
+button:hover {
+    background-color: var(--btn-hover-clr);
+}
 header {
     background-color: var(--base-clr);
     line-height: 1;
