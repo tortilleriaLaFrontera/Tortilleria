@@ -1,3 +1,5 @@
+
+/*#region Caja Flotante*/
 .caja-flotante {
     display: flex;
     flex-direction: column;
@@ -32,3 +34,31 @@
 .boton-base:hover {
     box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.23);
 }
+/*#endregion*/
+/*#region Strip Registrarse*/
+.strip {
+    display: flex;
+    padding: 20px 10%;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--message-bg-clr);
+    width: 100%;
+    height: auto;
+}
+.strip p {
+    font-size: large;
+}
+.strip-1p {
+    color: #FAE267;
+}
+.strip-2p {
+    color: var(--banner-txt-clr);
+    text-align: center;
+}
+.strip button {
+    background-color: var(--base-subtext-clr);
+    color: black;
+    border-radius: 60px;
+    padding: 15px;
+}
+/*#endregion*/
