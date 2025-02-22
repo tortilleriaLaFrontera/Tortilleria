@@ -1,0 +1,42 @@
+.caja-flotante {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.479);
+    width: 75vw;
+    max-width: 50%;
+    margin: 3rem;
+    padding: 2.5rem;
+    align-items:center;
+    row-gap: 8em;
+    justify-content: space-evenly;
+    border-radius: 20px;
+
+}
+.caja-flotante p {
+    color: var(--banner-txt-clr);
+    text-align: center;
+    font-size: 35px;
+    filter: drop-shadow(0px 2px 4px #000000);
+    
+}
+.caja-flotante div {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    
+}
+.boton-base {
+    cursor: pointer;
+    color: var(--btn-text-clr);
+    background-color: var(--btn-clr);
+    padding: 20px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 20px;
+    transition-duration: 0.2s;
+    box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.308);
+}
+.boton-base:hover {
+    background-color: var(--btn-hover-clr);
+    box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.23);
+}
