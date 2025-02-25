@@ -1,4 +1,8 @@
 
+main{
+    background: url("../img/background_LaFrontera.jpg") no-repeat fixed;
+    
+}
 /*#region Caja Flotante*/
 .caja-flotante {
     display: flex;

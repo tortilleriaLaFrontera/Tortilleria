@@ -1,0 +1,21 @@
+main{
+    background-image: url("../img/background_LaFrontera.jpg");
+    display: flexbox;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.hero-owner{
+    display: flex;
+    width:80%;
+    > div img {
+        border-radius: 50%;
+        max-width: 90%;
+
+    }
+    
+    > p {
+        max-width: 70%;
+        text-align: start;
+        align-self: center;
+    }
+}

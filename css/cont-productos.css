@@ -1,0 +1,36 @@
+main {
+    background-image: url("../img/background_LaFrontera.jpg");
+}
+.caja-flotante {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(218, 218, 218, 0.479);
+    width: 80vw;
+    margin: 3rem;
+    padding: 2.5rem;
+    align-items:center;
+    row-gap: 8em;
+    justify-content: space-evenly;
+    border-radius: 20px;
+}
+.producto-area{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    > img {
+        border-radius: 20px;
+    }
+    
+    
+}
+.product-info{
+    margin: 5px;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+.producto-nombre {
+    font-size: 20PX;
+}
+.producto-nombre, .producto-descripcion {
+    margin-left: 10%;
+}
