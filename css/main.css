@@ -85,5 +85,40 @@ main {
     justify-content: space-between;
     
 }
+
+/*#region Strip Registrarse*/
+.strip {
+    display: flex;
+    padding: 20px 10%;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--message-bg-clr);
+    width: 100%;
+    height: auto;
+
+    /* Positioning */
+    position: fixed; /* Makes the banner float over all other content */
+    bottom: 0; /* Positions the banner at the bottom of the viewport */
+    left: 0; /* Aligns the banner to the left edge of the viewport */
+    z-index: 1000; /* Ensures the banner stays on top of other elements */
+
+}
+.strip p {
+    font-size: large;
+}
+.strip-1p {
+    color: #FAE267;
+}
+.strip-2p {
+    color: var(--banner-txt-clr);
+    text-align: center;
+}
+.strip button {
+    background-color: var(--base-subtext-clr);
+    color: black;
+    border-radius: 60px;
+    padding: 15px;
+}
+/*#endregion*/
 /*#endregion*/
 /*#endregion*/
