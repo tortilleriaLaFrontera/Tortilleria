@@ -1,12 +1,20 @@
 main{
     background-image: url("../img/background_LaFrontera.jpg");
-    display: flexbox;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-.hero-owner{
     display: flex;
-    width:80%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.bloque {
+    background-color: #f0e5de;
+    border: 1px solid var(--base-clr);
+    border-radius: 15px;
+    margin: 1vw;
+    padding: 2vw;
+    width: 80%;
+    max-width: 800px; /* Limit maximum width for better readability */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vw; /* Increase gap for better spacing */
     > div img {
         border-radius: 50%;
         max-width: 90%;
@@ -19,3 +27,38 @@ main{
         align-self: center;
     }
 }
+.hero-owner {
+    align-items: center;
+}
+.image-title-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+    margin-bottom: 1.5vw; 
+    
+}
+.showpic {
+    border-radius: 15px;
+    width: 60%; 
+    max-width: 200px; /* Limit maximum image width */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.image-title {
+    font-size: 1.5rem; /* Increase title font size */
+    font-weight: bold; /* Make title bold */
+    color: var(--base-subtext-clr); /* Use a theme color for the title */
+    margin: 0; /* Remove default margin */
+}
+.columna div img {
+    border-radius: 15px;
+
+}
+.description {
+    text-align: justify; /* Justify text for a cleaner look */
+    line-height: 1.6; /* Improve readability with more line height */
+    color: #333; /* Darker text color for better contrast */
+    margin: 0; /* Remove default margin */
+}
+
+
