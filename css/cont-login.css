@@ -1,12 +1,21 @@
+.cajaMain {
+    margin: 5vw;
+    width: 50vw;
+    border: 1px solid var(--base-clr);
+    display: flex;
+    border-radius: 1.25em;
+}
+.registro, .login {
+    transition: 0.4s;
+    flex-grow: 0.2;
+}
+.enuso {
+    flex-grow: 0.8;
+}
 form {
-    background-color: #f0e5de;
+    background-color: #f7af82;
     border: 1px solid var(--base-clr);
     border-radius: 15px;
-    margin: 5vw;
-    width: 40vw;
-    padding: 2vw;
-    
-
     display: flex;
     flex-direction: column;
     gap: 1vw;
