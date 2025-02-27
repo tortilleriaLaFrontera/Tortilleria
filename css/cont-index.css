@@ -13,9 +13,9 @@ main{
     margin: 3rem;
     padding: 2.5rem;
     align-items:center;
-    row-gap: 8em;
+    row-gap: 3.5625rem;
     justify-content: space-evenly;
-    border-radius: 20px;
+    border-radius: 1.25rem;
 
 }
 .caja-flotante p {
