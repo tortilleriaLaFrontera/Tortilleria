@@ -17,6 +17,7 @@
     --bg-secondary-clr: #d3cbb4;
     --banner-txt-clr: #FFFFFF;
     --message-bg-clr: #573a09b4;
+    --active-index-clr: #e6cab8;
 }
 /*#endregion*/
 /*#region estructura base*/
@@ -48,15 +49,18 @@ button:hover {
 /*#region Navegacion*/
 header {
     background-color: var(--base-clr);
-    line-height: 1;
+    margin-bottom: 0.625rem;
+    border-radius: 0.3125rem;
     display: flex;
-    justify-content:space-around;
-    align-items: center;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    > .links {
+        line-height: 1;
+        display: flex;
+        justify-content:space-around;
+        align-items: center;
+    }
     
 }
-header a {
+header .links a {
     cursor: pointer;
     color: var(--link-text-clr);
     font-size: 1.5rem;
@@ -64,17 +68,28 @@ header a {
     font-family: cursive;
     transition: 0.5s;
 }
-header a:hover {
-    letter-spacing: 1px;
+header .links a:hover {
+    letter-spacing: 0.0625rem;
 }
 
-header a img {
-    padding-top: 5px;
+header .links a img {
+    padding-top: 0.0625rem;
     padding-bottom: 0px;
-    max-height: 80px;
+    max-height: 5rem;
+}
+.logo-img {
+    display: inline-block;
+}
+.logo-texto {
+    display: none;
 }
 .activo {
     text-decoration: underline;
+}
+.patty {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 /*#endregion*/
 /*#region Main*/
@@ -86,7 +101,7 @@ main {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
     justify-content: space-between;
     
 }
@@ -94,7 +109,7 @@ main {
 /*#region Strip Registrarse*/
 .strip {
     display: flex;
-    padding: 20px 10%;
+    padding: 1.25rem 10%;
     align-items: center;
     justify-content: space-between;
     background-color: var(--message-bg-clr);
@@ -109,7 +124,7 @@ main {
 
 }
 .strip p {
-    font-size: large;
+    font-size: 1.25rem;
 }
 .strip-1p {
     color: #FAE267;
@@ -122,8 +137,77 @@ main {
     background-color: var(--base-subtext-clr);
     color: black;
     border-radius: 60px;
-    padding: 15px;
+    padding: 0.9375rem;
 }
 /*#endregion*/
 /*#endregion*/
 /*#endregion*/
+
+@media only screen and (max-width: 767px) {
+    body {
+        margin: 0 0;
+    }
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1001;
+    }
+    header .links {
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        align-items: start;
+        background-color: var(--base-clr);
+        left: 0;
+        top: 4.75rem;
+        opacity: 0%;
+        pointer-events: none; /* evita interacciones*/
+        transition: .3s ease-in-out;
+        width: 100%;
+        padding-bottom: 1px;
+        gap: 0;
+        > a {
+            padding: 0.9375rem;
+            text-align: start;
+            width: 100%;
+            box-shadow: inset -0.1875rem -0.8rem 0.8125rem 0.1875rem #1e1e1e11;
+        }
+    }
+    /* clase para indice actual*/
+    .activo {
+        padding: 0rem;
+        text-decoration: none;
+        text-indent: 2rem;
+        background-color: var(--active-index-clr);
+    }
+    /* clase para activacion de menu */
+    header .links.active {
+        
+        pointer-events: auto; /* reactiva interaccion */
+        translate: 0rem 1.5rem;
+        opacity: 100%;
+    }
+    .patty {
+        display: block;
+        position: relative;
+        
+    }
+    .iniciolink {
+        order: -1;
+    }
+    .logo-img {
+        display: none;
+    }
+    .logo-texto {
+        display: inline-block;
+    }
+    
+
+    
+    button{
+        padding: 1.25em;
+        border-radius: 1.25em;
+    }
+
+}

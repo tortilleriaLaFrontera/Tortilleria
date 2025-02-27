@@ -10,17 +10,26 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/cont-productos.css">
     <script src="js/bg-slideshow.js" defer></script>
+    <script src="js/abrir-menu.js" defer></script>
 </head>
 <body>
-    <header>
-        <a class="navegacion activo" href="productos.html">PRODUCTOS</a>
-        <a class="navegacion" href="nosotros.html">NOSOTROS</a>
-        
-        <a class="navegacion" href="index.html"><img  src="img/logo_Frontera.jpg" alt="La Frontera"></a>
 
-        <a class="navegacion" href="contacto.html">CONTACTO</a>
-        <a class="navegacion" href="registro.html">INICIAR SESION</a>
+    <header>
+        <div class="patty" onclick="abrirmenu()"><svg xmlns="http://www.w3.org/2000/svg" height="5rem" viewBox="0 -960 960 960" width="48px" fill="#000000"><path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/></svg></div>
+        <nav class="links">
+            <a class="navegacion activo" href="productos.html">PRODUCTOS</a>
+            <a class="navegacion" href="nosotros.html">NOSOTROS</a>
+            
+            <a class="navegacion iniciolink" href="index.html"><img class="logo-img" src="img/logo_Frontera.jpg" alt="La Frontera"><span class="logo-texto">INICIO</span></a>
+
+            <a class="navegacion" href="contacto.html">CONTACTO</a>
+            <a class="navegacion" href="registro.html">INICIAR SESION</a>
+        </nav>
+        <a href="index.html" class="patty"><img src="img/logo_Frontera.jpg" alt="La Frontera"></a>
+        <span class="patty usuario"></span>
+        
     </header>
+
     <main>
         <div class="caja-flotante">
             <span class="producto-area">
