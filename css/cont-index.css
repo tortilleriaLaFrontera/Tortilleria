@@ -22,7 +22,7 @@ main{
     font-family: 'Kaushan Script', serif;
     color: var(--banner-txt-clr);
     text-align: center;
-    font-size: 55px;
+    font-size: 3.4375rem;
     filter: drop-shadow(0px 2px 4px #000000);
     
 }
@@ -33,6 +33,7 @@ main{
     
 }
 .boton-base {
+    width: 8.96875rem;
     display: inline-block;
     box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.308);
 }
@@ -40,3 +41,21 @@ main{
     box-shadow: 0px 10px 5px -1px rgba(70, 51, 38, 0.23);
 }
 /*#endregion*/
+@media only screen and (max-width: 767px) {
+    .caja-flotante {
+        width: 90vw;
+        max-width: 100%;
+        margin: 1rem 5rem;
+        padding: 2.5rem 1rem;
+        row-gap: 3.5625rem;
+        justify-content: space-evenly;
+        border-radius: 1.25rem;
+    }
+    .boton-base {
+        width: 8.96875rem;
+    }
+    .caja-flotante p {
+        font-size: 2.5rem;
+    }
+    
+}
