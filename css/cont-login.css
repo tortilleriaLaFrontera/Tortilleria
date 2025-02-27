@@ -1,0 +1,22 @@
+form {
+    background-color: #f0e5de;
+    border: 1px solid var(--base-clr);
+    border-radius: 15px;
+    margin: 5vw;
+    width: 40vw;
+    padding: 2vw;
+    
+
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+}
+form input {
+    border: 1px solid var(--btn-text-clr);
+    background-color: var(--btn-text-clr);
+    border-radius: 10px;
+}
+form button {
+    margin-top: 3vw;
+    background-color: var(--base-subtext-clr);
+}
