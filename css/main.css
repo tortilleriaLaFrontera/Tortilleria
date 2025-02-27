@@ -52,7 +52,9 @@ header {
     margin-bottom: 0.625rem;
     border-radius: 0.3125rem;
     display: flex;
+    
     > .links {
+        width: 100%;
         line-height: 1;
         display: flex;
         justify-content:space-around;
