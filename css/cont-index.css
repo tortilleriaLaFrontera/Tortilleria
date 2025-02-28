@@ -1,16 +1,19 @@
 
 main{
-    background: url("../img/background_LaFrontera.jpg") no-repeat fixed;
-    
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 /*#region Caja Flotante*/
 .caja-flotante {
+    
     display: flex;
     flex-direction: column;
     background-color: rgba(0, 0, 0, 0.479);
     width: 75vw;
     max-width: 50%;
-    margin: 3rem;
+    height: 28vw;
     padding: 2.5rem;
     align-items:center;
     row-gap: 3.5625rem;
@@ -42,9 +45,14 @@ main{
 }
 /*#endregion*/
 @media only screen and (max-width: 767px) {
+    main {
+        padding-top: 80px;
+        justify-content: start;
+    }
     .caja-flotante {
         width: 90vw;
         max-width: 100%;
+        height: 38vh;
         margin: 1rem 5rem;
         padding: 2.5rem 1rem;
         row-gap: 3.5625rem;
@@ -52,7 +60,8 @@ main{
         border-radius: 1.25rem;
     }
     .boton-base {
-        width: 8.96875rem;
+        padding: 0.6rem 0.1rem;
+        
     }
     .caja-flotante p {
         font-size: 2.5rem;
