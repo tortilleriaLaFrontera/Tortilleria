@@ -4,33 +4,92 @@ main {
 .caja-flotante {
     display: flex;
     flex-direction: column;
-    background-color: rgba(218, 218, 218, 0.479);
-    width: 80vw;
+    background-color: rgba(238, 238, 238, 0.774);
+    width: 80%;
     margin: 3rem;
     padding: 2.5rem;
     align-items:center;
-    row-gap: 8em;
+    row-gap: 4rem;
     justify-content: space-evenly;
     border-radius: 20px;
 }
 .producto-area{
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.05rem;
     > img {
+        max-width: 20%;
         border-radius: 20px;
     }
-    
-    
 }
-.product-info{
+.producto-info {
+    max-width: 30%;
     margin: 5px;
-    flex-grow: 1;
     justify-content: space-between;
 }
 .producto-nombre {
     font-size: 20PX;
 }
 .producto-nombre, .producto-descripcion {
-    margin-left: 10%;
+    margin-left: 5%;
+    max-width: 80%;
+    font-weight: 500;
+}
+.aCanasta {
+    padding: 5px;
+    align-self:flex-end;
+    width: 8%;
+    height: 50px;
+    border-radius: 12px;
+    background-color: var(--base-subtext-clr);
+}
+.aCanasta:hover {
+    background-color: var(--base-text-clr);
+}
+
+@media only screen and (max-width: 767px) {
+    .caja-flotante {
+        width: 98%;
+        margin: 0.5rem;
+        padding: 1.5rem 0.5rem;
+        row-gap: 3rem;
+        justify-content: space-evenly;
+        border-radius: 20px;
+    }
+    .producto-area{
+        flex-direction: column;
+        gap: 0.05rem;
+        align-items: start;
+        gap: 1.5rem;
+        > img {
+            align-self: center;
+            max-width: 80%;
+            border-radius: 20px;
+        }
+    }
+    .producto-info {
+        width: 100%;
+        margin: 0;
+        justify-content: space-between;
+    }
+    .producto-nombre {
+        font-size: 25px;
+        text-align: center;
+    }
+    .producto-nombre, .producto-descripcion {
+        max-width: 95%;
+        font-weight: 500;
+    }
+    .aCanasta {
+        margin-right: 1.5rem;
+        padding: 10px 30px;
+        align-self:flex-end;
+        width: 30%;
+        height: 50px;
+        border-radius: 12px;
+        background-color: var(--base-subtext-clr);
+    }
+    .aCanasta:hover {
+        background-color: var(--base-text-clr);
+    }
 }
