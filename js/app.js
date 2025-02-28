@@ -3,6 +3,12 @@ function abrirmenu() {
     enlaces.classList.toggle('active');
     
 }
+function cambiarform() {
+    const regArea = document.querySelector('.registro');
+    const loginArea = document.querySelector('.login');
+    regArea.classList.toggle('enuso');
+    loginArea.classList.toggle('enuso');
+}
 
 //para cerrar el menu si hago click en otra parte
 document.addEventListener('click', function (event) {

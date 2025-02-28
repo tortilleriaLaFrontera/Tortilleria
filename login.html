@@ -32,40 +32,43 @@
 
     <main>
         <div class="cajaMain">
-            
-            <section class="registro">
+            <section class="cont-form login">
                 <form>
-                    <label for="reg-nombre">Nombre:</label>
-                    <input type="text" id="reg-nombre" name="reg-nombre">
-        
-                    <label for="reg-correo">Correo:</label>
-                    <input type="email" id="reg-correo" name="reg-correo">
+                    <h1>Iniciar Sesión</h1>
+                    <div class="casilla">
+                        <input type="email" placeholder="Correo Electronico">
+                    </div>
+                    <div class="casilla">
+                        <input type="password" placeholder="Contraseña">
+                    </div>
 
-                    <label for="reg-numero">Numero de contacto:</label>
-                    <input type="text" id="reg-numero" name="reg-numero">
-        
-                    <label for="reg-local">Nombre del local:</label>
-                    <input type="text" id="reg-local" name="reg-local">
-        
-                    <label for="reg-password">Contraseña</label>
-                    <input type="password" id="reg-password" name="reg-password">
-        
+                    <button>Iniciar Sesión</button>
+                </form> 
+            </section>
+            <section class="cont-form registro">
+                <form>
+                    <h1>Registrarse</h1>
+                    <div class="casilla">
+                        <input type="text" placeholder="Nombre de negocio">
+                    </div>
+                    <div class="casilla">
+                        <input type="text" placeholder="Nombre">
+                    </div>
+                    <div class="casilla">
+                        <input type="text" placeholder="Correo Electronico">
+                    </div>
+                    
                     <button>Solicitar Usuario</button>
                 </form>
             </section>
-
-            <section class="login enuso">
-                <form>
-                    
-                    <label for="correo">Correo:</label>
-                    <input type="email" id="correo" name="correo">
-        
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password">
-        
-                    <button>Iniciar Sesión</button>
-                </form>
-            </section>
+            
+            <!-- <div class="area-boton">
+                <h1>Ya tienes cuenta?</h1>
+                <p>inicia sesión aqui:</p>
+                <button onclick="cambiarform()">&rarr;</button>
+            </div> -->
+            
+            
         </div>
     </main>
 </body>
