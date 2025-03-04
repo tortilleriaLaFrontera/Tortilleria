@@ -119,8 +119,8 @@ main {
     height: auto;
 
     /* Positioning */
-    position: fixed; /* Makes the banner float over all other content */
-    bottom: 100px; /* Positions the banner at the bottom of the viewport */
+    position: sticky; /* Makes the banner float over all other content */
+    bottom: 0; /* Positions the banner at the bottom of the viewport */
     left: 0; /* Aligns the banner to the left edge of the viewport */
     z-index: 1000; /* Ensures the banner stays on top of other elements */
 
