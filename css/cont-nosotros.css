@@ -23,7 +23,7 @@ main{
     
     > p {
         max-width: 70%;
-        text-align: start;
+        text-align: justify;
         align-self: center;
     }
 }
