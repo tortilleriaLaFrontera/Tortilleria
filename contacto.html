@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contactanos!</title>
+    <title>Contactanos! - La Frontera</title>
     <!-- normalizador/reset de css-->
     <link rel="stylesheet" href="css/reset.css">
     <!--css-->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/cont-contacto.css">
+    <!--css específico para contacto-->
+    <link rel="stylesheet" href="css/contacto.css">
     <script src="js/bg-slideshow.js" defer></script>
     <script src="js/app.js" defer></script>
 </head>
 <body>
-
     <header>
         <div class="patty menu" onclick="abrirmenu()"><svg xmlns="http://www.w3.org/2000/svg" height="5rem" viewBox="0 -960 960 960" width="48px" fill="#000000"><path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/></svg></div>
         <nav class="links">
@@ -21,53 +21,101 @@
             <a class="navegacion" href="nosotros.html">NOSOTROS</a>
             
             <a class="navegacion iniciolink" href="index.html"><img class="logo-img" src="img/logo_Frontera.jpg" alt="La Frontera"><span class="logo-texto">INICIO</span></a>
-
             <a class="navegacion activo" href="contacto.html">CONTACTO</a>
             <a class="navegacion" href="login.html">INICIAR SESION</a>
         </nav>
         <a href="index.html" class="patty"><img src="img/logo_Frontera.jpg" alt="La Frontera"></a>
         <span class="patty usuario"></span>
-        
     </header>
-
+    
     <main>
-        <div class="box">
-            <div class="mensaje"><p>Contactanos!</p></div>
-            <div class="left">
-                <img src="img/contacto-resources/logo_LaFrontera.jpg" alt="logo" class="logo-imagen">
-                <span class="contactinfo">
-                    
-                    <img src="img/contacto-resources/horario.png" alt="horario" class="icono">
-                    <p class="dato">Luneas a Domingo<br></p>
-                </span>
-
-                <span class="contactinfo">
-                    
-                    <img src="img/contacto-resources/phone.png" alt="telefono" class="icono">
-                    <p class="dato">(686)384-0301</p>
-                </span>
-
-                <span class="contactinfo">
-                    
-                    <img src="img/contacto-resources/facebook.png" alt="facebook" class="icono">
-                    <p class="dato"><a href="https://www.facebook.com/p/Tortiller%C3%ADa-de-harina-la-Frontera-100063449689295/">Tortillería de harina la Frontera</a></p>
-                </span>
-            </div>
-
-            <div class="right">
-                <span class="contactinfo">
+        <!-- Sección de Contacto -->
+        <section class="contacto-container">
+            <div class="contacto-info">
+                <h2>Contáctanos</h2>
                 
-                    <img class="mapa" src="https://external.fmxl1-1.fna.fbcdn.net/static_map.php?v=2059&theme=default&ccb=4-4&size=544x250&language=en_US&scale=1&zoom=12&center=32.627749195182%2C-115.39278829238&marker_list[0]=32.627749195182%2C-115.39278829238&_nc_client_id=comet_profile_address_preview&_nc_client_caller=CometStaticMap.react" alt="mapa">
-                    <p class="dato">Calle cuarta y palmar de santa Anita Mexicali II, Mexico</p>
-                </span>
-                <img  class="person" src="img/contacto-resources/sales.png" alt="salesprsn">
-
+                <div class="contacto-card">
+                    <div class="contacto-icon">
+                        <img src="img/phone-icon.png" alt="Teléfono">
+                    </div>
+                    <div class="contacto-details">
+                        <h3>Pedidos al:</h3>
+                        <p>(686) 384 03 01</p>
+                        <p>(686) 394 41 05</p>
+                    </div>
+                </div>
+                
+                <div class="contacto-card">
+                    <div class="contacto-icon">
+                        <img src="img/location-icon.png" alt="Ubicación">
+                    </div>
+                    <div class="contacto-details">
+                        <h3>Dirección:</h3>
+                        <p>Calle cuarta y palmar de santa Anita</p>
+                        <p>Mexicali II, Mexico</p>
+                        <a href="https://g.co/kgs/5k5bcpF" class="map-link">Cómo llegar</a>
+                    </div>
+                </div>
+                
+                <div class="contacto-card">
+                    <div class="contacto-icon">
+                        <img src="img/clock-icon.png" alt="Horario">
+                    </div>
+                    <div class="contacto-details">
+                        <h3>Horario:</h3>
+                        <p>Abierto</p>
+                        <p>Lunes a Domingo</p>
+                    </div>
+                </div>
+                
+                <div class="contacto-card">
+                    <div class="contacto-icon">
+                        <img src="img/facebook-icon.png" alt="Facebook">
+                    </div>
+                    <div class="contacto-details">
+                        <h3>Síguenos:</h3>
+                        <a href="https://www.facebook.com/profile.php?id=100063449689295" target="_blank" class="social-link">La Frontera Tortillería</a>
+                    </div>
+                </div>
             </div>
             
-        </div>
+            <div class="contacto-form">
+                <h2>Envíanos un Mensaje</h2>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" name="telefono">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mensaje">Mensaje:</label>
+                        <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Enviar Mensaje</button>
+                </form>
+            </div>
+            
+            <div class="contacto-map">
+                <h2>Nuestra Ubicación</h2>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3359.0404403321105!2d-115.5!3d32.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDM2JzAwLjAiTiAxMTXCsDMwJzAwLjAiVw!5e0!3m2!1sen!2sus!4v1619749051072!5m2!1ses!2smx" 
+                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
     </main>
+    
     <section class="strip">
-        <p class="strip-1p">Listo para ordenar?</p>
+        <p class="strip-1p">¿Listo para ordenar?</p>
         <p class="strip-2p">Registrate ahora y disfruta de la facilidad<br>de hacer pedidos en linea</p>
         <a href="registro.html"><button>Registrate aqui!</button></a>
     </section>
