@@ -20,3 +20,16 @@ form button {
     margin-top: 3vw;
     background-color: var(--base-subtext-clr);
 }
+@media only screen and (max-width: 767px) {
+    form {
+        width: 80%;
+        padding-top: 45px;
+        > label {
+            margin-left: 5px;
+            font-size: 20px;
+        }
+        > input {
+            margin-bottom: 50px;
+        }
+    }
+}
