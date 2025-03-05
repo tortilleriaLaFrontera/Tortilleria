@@ -1,0 +1,218 @@
+/* Estilos para la sección de contacto */
+.contacto-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+}
+
+.contacto-info, .contacto-form, .contacto-map {
+    flex: 1 1 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    min-width: 300px;
+}
+
+.contacto-info h2, .contacto-form h2, .contacto-map h2 {
+    color: #7b341e;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e6a756;
+    padding-bottom: 0.5rem;
+}
+
+/* Tarjetas de información de contacto */
+.contacto-card {
+    display: flex;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.contacto-icon {
+    flex: 0 0 70px;
+    width: 70px;
+    height: 70px;
+    background-color: #fff5e6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    border: 2px solid #e6a756;
+    overflow: hidden;
+}
+
+.contacto-icon img {
+    width: 65%;
+    height: 65%;
+    object-fit: contain;
+    max-width: none;
+    max-height: none;
+}
+
+.contacto-details {
+    flex: 1;
+}
+
+.contacto-details h3 {
+    font-size: 1.4rem;
+    color: #7b341e;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.contacto-details p {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 0.5rem 0;
+    line-height: 1.3;
+}
+
+.map-link, .social-link {
+    display: inline-block;
+    color: #e67e22;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    transition: color 0.3s;
+    font-size: 1.2rem;
+}
+
+.map-link:hover, .social-link:hover {
+    color: #d35400;
+    text-decoration: underline;
+}
+
+/* Formulario de contacto */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: #e67e22;
+    outline: none;
+}
+
+.submit-btn {
+    background-color: #7b341e;
+    color: white;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #a0522d;
+}
+
+/* Mapa */
+.contacto-map iframe {
+    border-radius: 8px;
+    margin-top: 1rem;
+    width: 100%;
+    height: 300px;
+}
+
+/* Ajuste para la sección strip (cuadro de ordenar) */
+.strip {
+    position: relative;  /* Cambiado de 'fixed' o 'absolute' si estaba así */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(123, 52, 30, 0.9);  /* Color base con transparencia */
+    color: #fff;
+    padding: 1rem 2rem;
+    text-align: center;
+    z-index: 1;  /* Valor bajo para que no se superponga */
+    margin-top: 2rem;  /* Espacio superior para separarlo del contenido */
+    border-top: 2px solid #e6a756;  /* Borde decorativo */
+}
+
+.strip-1p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.strip-2p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.strip button {
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.strip button:hover {
+    background-color: #d35400;
+}
+
+/* Aseguramos que el main tenga un min-height para evitar problemas de espacio */
+main {
+    min-height: 70vh; /* Altura mínima para asegurar contenido suficiente */
+    padding-bottom: 2rem; /* Espacio inferior para separarlo del strip */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .contacto-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .contacto-info, .contacto-form, .contacto-map {
+        flex: 1 1 100%;
+    }
+    
+    .contacto-icon {
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .strip {
+        padding: 0.75rem 1rem;
+    }
+    
+    .strip-1p {
+        font-size: 1.3rem;
+    }
+    
+    .strip-2p {
+        font-size: 1rem;
+    }
+}
