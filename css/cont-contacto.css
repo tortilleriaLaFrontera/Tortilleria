@@ -2,33 +2,114 @@ main {
     align-items: center;
     justify-content: center;
 }
+.mensaje {
+    display: none;
+}
 .box {
-    height: 80dvh;
-    width: 77%;
-    background-color: blueviolet;
     display: flex;
-    justify-content: space-evenly;
+    flex-grow: 0.6;
+    height: 100%;
+    width: 77%;
+    background-color: var(--base-clr);
+    opacity: 90%;
+    border-radius: 15px;
+    padding-top: 4%;
+    padding-left: 4%;
+    padding-right: 4%;
 }
 .left {
     width: 50%;
-    background-color: aqua;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    
+    > .logo-imagen {
+        width: 40%;
+        position: absolute;
+        top: 0;
+        align-self: center;
+        border-radius: 50%;
+    }
+    > span {
+        margin-left: 20%;
+    }
 }
 .right {
-    background-color: violet;
-    width: 45%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: end;
-    > img {
-        width: 80%;
+    flex-grow: 1;
+    > .contactinfo {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: end;
+        align-items: center;
     }
-    
 }
 .contactinfo {
     display: flex;
     justify-content: start;
     gap: 10px;
+    align-items: center;
+    font-size: 26px;
 }
+.contactinfo img {
+    width: 62px;
+    height: 62px;
+}
+.contactinfo .mapa {
+    height: 80%; 
+    width: 90%;
+    border-radius: 15px;
+}
+.person {
+    align-self: center;
+    height: 50%;
+    width: 65%;
+}
+@media only screen and (max-width: 767px) {
+    .box {
+        flex-direction: column;
+        height: 90%;
+    }
+    .mensaje {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        > p {
+            font-size: 28px;
+        }
+    }
+    .left, .right {
+        width: 100%;
+        padding: 0;
+        > span {
+            margin: 0;
+        }
+        
+    }
+    .contactinfo img {
+        height: 45px;
+        width: 45px;
+    }
+    .left .logo-imagen{
+        display: none;
+    }
+    .contactinfo {
+        flex-direction: column;
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+    .contactinfo p {
+        font-size: 18px;
+    }
+}
+
+
