@@ -9,6 +9,7 @@
     --base-clr: #E9D7CB;
     --base-text-clr: #A74215;
     --base-subtext-clr: #ed8e36;
+    --base-subtext-clr-hover: #eca25c;
     --link-text-clr: #2F220E;
     --btn-clr: #322103;
     --btn-hover-clr: #3B2A13;
@@ -144,7 +145,86 @@ main {
 /*#endregion*/
 /*#endregion*/
 /*#endregion*/
+/*#region login*/
+.login-container {
+    position: relative;
+    display: inline-block;
+}
 
+.login-container a {
+    cursor: pointer;
+    color: var(--link-text-clr);
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: cursive;
+    transition: 0.5s;
+    text-decoration: none; 
+}
+
+.login-container a:hover {
+    letter-spacing: 0.0625rem;
+}
+
+/* Popup */
+.popup {
+    display: none; 
+    position: absolute;
+    top: 100%; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--base-clr);
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.popup-content h2 {
+    margin-bottom: 20px;
+}
+
+.popup-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.popup-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    background-color: var(--active-index-clr);
+    color: var(--link-text-clr);
+    border-radius: 4px;
+}
+
+.popup-content button {
+    background-color: var(--base-subtext-clr);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.popup-content button:hover {
+    background-color: var(--base-subtext-clr-hover);
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+/*#endregion*/
 @media only screen and (max-width: 767px) {
     main {
         background-position: center center;

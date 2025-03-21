@@ -9,8 +9,9 @@
     <!--css-->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/cont-productos.css">
+    <!-- scripts -->
     <script src="js/bg-slideshow.js" defer></script>
-    <script src="js/app.js" defer></script>
+    <script src="js/app.js" type="module" defer></script>
 </head>
 <body>
 
@@ -23,7 +24,26 @@
             <a class="navegacion iniciolink" href="index.html"><img class="logo-img" src="img/logo_Frontera.jpg" alt="La Frontera"><span class="logo-texto">INICIO</span></a>
 
             <a class="navegacion" href="contacto.html">CONTACTO</a>
-            <a class="navegacion" href="login.html">INICIAR SESION</a>
+            <!-- Boton de inicio de sesion -->
+            <div class="login-container">
+                <a class="navegacion"  onclick="openLoginPopup(event)">INICIAR SESION</a>
+                <!-- Login Popup -->
+                <div id="loginPopup" class="popup">
+                    <div class="popup-content">
+                        <span class="close" onclick="closeLoginPopup()">&times;</span>
+                        <h2>Iniciar Sesión</h2>
+                        <form id="loginForm">
+                            <label for="email">Correo Electrónico:</label>
+                            <input type="email" id="email" name="email" required>
+                            
+                            <label for="password">Contraseña:</label>
+                            <input type="password" id="password" name="password" required>
+                            
+                            <button type="submit">Iniciar Sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </nav>
         <a href="index.html" class="patty"><img src="img/logo_Frontera.jpg" alt="La Frontera"></a>
         <span class="patty usuario"></span>
