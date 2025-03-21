@@ -4,6 +4,7 @@ header("Content-Type: application/json"); // las respuestas seran en formato JSO
 
 // conn a db
 require_once 'dbConnect.php';
+require_once 'usuarioRepo.php';
 
 // recibir los datos de POST (raw)
 $data = json_decode(file_get_contents("php://input"), true);
@@ -21,7 +22,7 @@ try {
     }
 
     // validacion de pw hasheado
-    if (password_verify($password, $user["password"])) {
+    if (password_verify($password, $user["pwhashed"])) {
         // responder 'success' con los datos
         echo json_encode([
             "success" => true,

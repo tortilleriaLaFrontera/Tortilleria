@@ -3,8 +3,9 @@
 
 header("Content-Type: application/json"); // Set response type to JSON
 
-// Include the database connection
+// Include the database connection and usuarioRepo.php
 require_once 'dbConnect.php';
+require_once 'usuarioRepo.php'; // Include the file where crearUsr() is defined
 
 // Get the raw POST data
 $input = file_get_contents("php://input");
@@ -29,22 +30,19 @@ if (!$data) {
 $nombre = $data["nombre"] ?? null;
 $correo = $data["correo"] ?? null;
 $direccion = $data["direccion"] ?? null;
-$password = $data["password"] ?? null;
+$telefono = $data["telefono"] ?? null;
 
-if (!$nombre || !$correo || !$direccion || !$password) {
+if (!$nombre || !$correo || !$direccion || !$telefono) {
     echo json_encode([
         "success" => false,
-        "message" => "Missing required fields"
+        "message" => "Faltan campos requeridos"
     ]);
     exit();
 }
 
 try {
-    // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
     // Call the Data Access Layer to create a user
-    $userId = crearUsr($nombre, $correo, $direccion, $hashedPassword);
+    $userId = crearUsr($nombre, $correo, $direccion, $telefono);
 
     // Return a success response with the user ID
     echo json_encode([

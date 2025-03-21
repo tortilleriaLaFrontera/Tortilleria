@@ -3,18 +3,18 @@
 require_once 'dbConnect.php';
 
 // creacion de usuario
-function crearUsr($nombre, $correo, $direccion, $password) {
+function crearUsr($nombre, $correo, $direccion, $telefono) {
     global $conn;
 
     // Prepare the SQL query
-    $stmt = $conn->prepare("INSERT INTO usuario (nombre, correo, direccion, password, activo) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO usuario (nombre, correo, direccion, telefono) VALUES (?, ?, ?, ?)");
     if (!$stmt) {
         die("Prepare failed: " . $conn->error);
     }
 
     // Bind parameters and execute the query
     $activo = false; // Set 'activo' to false by default
-    $stmt->bind_param("ssssi", $nombre, $correo, $direccion, $password, $activo);
+    $stmt->bind_param("ssss", $nombre, $correo, $direccion, $telefono);
     if ($stmt->execute()) {
         return $stmt->insert_id; // Return the ID of the newly created user
     } else {
@@ -59,37 +59,19 @@ function getUsrConMail($correo) {
 }
 
 // actualizar datos de usuario
-function actualizarUsr($id, $nombre, $telefono, $direccion) {
+function actualizarUsr($id, $nombre, $telefono, $direccion, $pwhashed) {
     global $conn;
 
     // preparacion del query
-    $stmt = $conn->prepare("UPDATE usuario SET nombre = ?, telefono = ?, direccion = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE usuario SET nombre = ?, telefono = ?, direccion = ?, pwhashed = ?, WHERE id = ?");
     if (!$stmt) {
         die("Fallo en preparación: " . $conn->error);
     }
 
     // assoc de params y ejecucion
-    $stmt->bind_param("sssi", $nombre, $telefono, $direccion, $id);
+    $stmt->bind_param("ssssi", $nombre, $telefono, $direccion, $pwhashed, $id);
     if ($stmt->execute()) {
         return $stmt->affected_rows > 0; // true si fue exitoso
-    } else {
-        die("Fallo en ejecución: " . $stmt->error);
-    }
-}
-
-// Desactivar usr (cambiar a true o false)
-function activarUser($id) {
-    global $conn;
-
-    $stmt = $conn->prepare("UPDATE usuario SET activo = ? WHERE id = ?");
-    if (!$stmt) {
-        die("Fallo en preparación: " . $conn->error);
-    }
-
-    $activo = true;
-    $stmt->bind_param("ii", $activo, $id);
-    if ($stmt->execute()) {
-        return $stmt->affected_rows > 0; // contestar con true si se activo
     } else {
         die("Fallo en ejecución: " . $stmt->error);
     }
