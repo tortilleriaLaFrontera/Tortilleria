@@ -40,21 +40,45 @@
     <header>
         <div class="patty menu" onclick="abrirmenu()"><svg xmlns="http://www.w3.org/2000/svg" height="5rem" viewBox="0 -960 960 960" width="48px" fill="#000000"><path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/></svg></div>
         <nav class="links">
-            <a class="navegacion <?= ($currentPage === 'productos') ? 'activo' : '' ?>" href="index.php?action=productos">PRODUCTOS</a>
-            <a class="navegacion <?= ($currentPage === 'nosotros') ? 'activo' : '' ?>" href="index.php?action=nosotros">NOSOTROS</a>
-            
-            <a class="navegacion iniciolink <?= ($currentPage === 'index') ? 'activo' : '' ?>" href="index.php">
-                <img class="logo-img" src="img/logo_Frontera.jpg" alt="La Frontera">
-                <span class="logo-texto">INICIO</span>
-            </a>
+            <span class="headerSpace header-left">
+                
+                <a class="navegacion <?= ($currentPage === 'productos') ? 'activo' : '' ?>" href="index.php?action=productos">PRODUCTOS</a>
+                <a class="navegacion <?= ($currentPage === 'nosotros') ? 'activo' : '' ?>" href="index.php?action=nosotros">NOSOTROS</a>
 
-            <a class="navegacion <?= ($currentPage === 'contacto') ? 'activo' : '' ?>" href="index.php?action=contacto">CONTACTO</a>
+            </span>
             
-            <?php if(!isset($_SESSION['user_id'])): ?>
-                <a class="navegacion" href="index.php?action=login">INICIAR SESION</a>
-            <?php else: ?>
-                <a class="navegacion" href="index.php?action=logout">CERRAR SESION</a>
-            <?php endif; ?>
+            <span class="headerSpace header-center">
+
+                <a class="navegacion iniciolink <?= ($currentPage === 'index') ? 'activo' : '' ?>" href="index.php">
+                    <img class="logo-img" src="img/logo_Frontera.jpg" alt="La Frontera">
+                    <span class="logo-texto">INICIO</span>
+                </a>
+
+            </span>
+            
+            <span class="headerSpace header-right">
+
+                <a class="navegacion <?= ($currentPage === 'contacto') ? 'activo' : '' ?>" href="index.php?action=contacto">CONTACTO</a>
+                
+                <?php if(!isset($_SESSION['user_id'])): ?>
+                    <a class="navegacion" href="index.php?action=login">INICIAR SESION</a>
+                <?php else: ?>
+                    <span class="navegacion user-profile">
+                        
+                        <a class="navegacion" href="index.php?action=cart">
+                            <img class="userBtns" src="img/cart.png" alt="logout">
+                        </a>
+
+                        <a href="index.php?action=logout">
+                            <img class="userBtns" src="img/phone-icon.png" style="border-radius: 50%;" alt="user_img">
+                        </a>
+
+                    </span>
+                    
+                <?php endif; ?>
+                
+            </span>
+            
         </nav>
             <a href="index.html" class="patty"><img src="img/logo_Frontera.jpg" alt="La Frontera"></a>
             <span class="patty usuario"></span>

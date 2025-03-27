@@ -15,7 +15,7 @@
         <section class="caja-flotante">
             <p>El Arte de la<br>Tortilla de Harina</p>
             <div>
-                <button class="boton-base"><a href="index.php?action=producto">Ver Producto</a></button>
+                <button class="boton-base"><a href="index.php?action=productos">Ver Producto</a></button>
                 <button class="boton-base"><a href="index.php?action=perfil">Perfil</a></button>
             </div>
         </section>
