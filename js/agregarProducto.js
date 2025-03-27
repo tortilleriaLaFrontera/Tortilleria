@@ -6,19 +6,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const productArea = this.closest('.producto-area');
             const productId = productArea.getAttribute('data-product-id');
             
-            // Send to server via AJAX
+            // mandar a servidor via AJAX
             addToCart(productId);
         });
     });
 
     // AJAX function to add to cart
-    function addToCart(productId, quantity = 1) {
+    function addToCart(productId, cantidad = 1) {
         fetch('index.php?action=add_to_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `product_id=${productId}&quantity=${quantity}`
+            body: `product_id=${productId}&cantidad=${cantidad}`
         })
         .then(response => response.json())
         .then(data => {

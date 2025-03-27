@@ -37,15 +37,21 @@ main {
     font-weight: 500;
 }
 .aCanasta {
+    transition: transform 0.2s, background-color 0.2s;
     padding: 5px;
     align-self:flex-end;
     width: 8%;
     height: 50px;
     border-radius: 12px;
     background-color: var(--base-subtext-clr);
+    cursor: pointer;
 }
 .aCanasta:hover {
     background-color: var(--base-text-clr);
+    transform: scale(1.1);
+}
+.aCanasta:active {
+    transform: scale(0.95);
 }
 
 @media only screen and (max-width: 767px) {

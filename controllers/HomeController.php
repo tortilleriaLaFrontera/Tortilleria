@@ -45,5 +45,15 @@ class HomeController {
         include_once './views/register.php';
         include_once './views/templates/footer.php';//nvo
     }
+    public function viewCart($cartItems) {
+        // Calculate total
+        $total = 0;
+        foreach ($cartItems as $item) {
+            $total += $item['cantidad'];
+        }
+        
+        // Include your cart view file
+        require_once './views/cart.php';
+    }
 }
 ?>

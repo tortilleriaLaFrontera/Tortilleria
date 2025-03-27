@@ -46,16 +46,15 @@ switch($action) {
     case 'contacto':
         $homeController->contacto();
         break;
-    case 'agregar_producto':
+    case 'add_to_cart':
         if (!isset($_SESSION['user_id'])) {
             $userController->login();
         }
         $productId = $_POST['producto_id'] ?? 0;
-        $cantidad = $_POST['quantity'] ?? 1;
+        $cantidad = $_POST['cantidad'] ?? 1;
         $result = $cartController->addToCart($_SESSION['user_id'], $productId, $cantidad);
         header("Location: index.php?action=productos&cart_success=1");
         exit();
-        break;
     case 'view_cart':
         if (!isset($_SESSION['user_id'])) {
             $userController->login();
@@ -74,7 +73,7 @@ switch($action) {
         $cartController->updateCantidad($cartId, $_SESSION['user_id'], $cantidad);
         header("Location: index.php?action=view_cart");
         exit();
-        break;
+        
 
     case 'remove_from_cart':
         if (!isset($_SESSION['user_id'])) {
@@ -85,7 +84,7 @@ switch($action) {
         $cartController->removerDeCarrito($cartId, $_SESSION['user_id']);
         header("Location: index.php?action=view_cart");
         exit();
-        break;
+        
     
     default:
         $homeController->index();

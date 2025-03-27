@@ -7,5 +7,8 @@
         </section>
     <?php endif; ?>
     <script src="./js/validation.js"></script>
+    <?php if($page === 'productos'): ?>
+        <script src="./js/agregarProducto.js"></script>
+    <?php endif; ?>
 </body>
 </html>
