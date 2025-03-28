@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle all "Add to Cart" buttons
+    // Manejo de botones "Agregar a carrito"
     document.querySelectorAll('.aCanasta').forEach(button => {
         button.addEventListener('click', function() {
-            // Get the product ID from parent element
+            //extraer el id de producto del papa
             const productArea = this.closest('.producto-area');
             const productId = productArea.getAttribute('data-product-id');
             
             // mandar a servidor via AJAX
-            addToCart(productId);
+            addToCart(productId, this);
         });
     });
 
-    // AJAX function to add to cart
-    function addToCart(productId, cantidad = 1) {
+    // funcion AJAX para agregar a carrito
+    function addToCart(productId,button, cantidad = 1) {
         fetch('index.php?action=add_to_cart', {
             method: 'POST',
             headers: {
@@ -23,9 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show success feedback
+                // feedback de exito
+                button.classList.add('added');
                 alert('Producto añadido al carrito');
-                // You could update a cart counter here
+                // Contador de carrito (Implementacion en discusion)
             } else {
                 alert(data.message || 'Error al añadir al carrito');
             }
@@ -35,4 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Error de conexión');
         });
     }
+
+    
 });

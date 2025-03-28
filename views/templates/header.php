@@ -63,18 +63,52 @@
                 <?php if(!isset($_SESSION['user_id'])): ?>
                     <a class="navegacion" href="index.php?action=login">INICIAR SESION</a>
                 <?php else: ?>
-                    <span class="navegacion user-profile">
+                    <div class="header-dropdowns">
                         
-                        <a class="navegacion" href="index.php?action=cart">
-                            <img class="userBtns" src="img/cart.png" alt="logout">
-                        </a>
-
-                        <a href="index.php?action=logout">
-                            <img class="userBtns" src="img/phone-icon.png" style="border-radius: 50%;" alt="user_img">
-                        </a>
-
-                    </span>
-                    
+                        <!-- Contenedor carrito -->
+                        <div class="dropdown cart-dropdown">
+                            <a class="navegacion cart-toggle" href="index.php?action=cart">
+                                <span class="cart-icon-wrapper">
+                                    <img class="userBtns" src="img/cart.png" alt="cart">
+                                    <span class="cart-count">
+                                        <?php 
+                                            // TEMPORAL PARA DESARROLLO
+                                            if(isset($cartController)) {
+                                                echo $cartController->getCartCount($_SESSION['user_id']);
+                                            } else {
+                                                echo '0';
+                                            }
+                                        ?>
+                                    </span>
+                                </span>
+                            </a>    
+                            
+                            <div class="dropdown-content cart-content">
+                                <?php 
+                                // Seccion para visualizar el carrito cuando haces hover (se suponsio)
+                                if(isset($_SESSION['user_id']) && isset($cartController)) {
+                                    $cartItems = $cartController->getCart($_SESSION['user_id']);
+                                    echo '<pre>Debug: '; 
+                                    print_r($cartItems); 
+                                    echo '</pre>'; // Remove this after debugging
+                                    $isDropdown = true;
+                                    include './views/cart.php';
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        
+                        <!-- User Profile Dropdown -->
+                        <div class="dropdown profile-dropdown">
+                            <a class="profile-toggle">
+                                <img class="userBtns" src="img/phone-icon.png" style="border-radius: 50%;" alt="profile">
+                            </a>
+                            <div class="dropdown-content profile-content">
+                                <a href="index.php?action=profile">Mi Perfil</a>
+                                <a href="index.php?action=logout">Cerrar Sesión</a>
+                            </div>
+                        </div>
+                    </div>
                 <?php endif; ?>
                 
             </span>

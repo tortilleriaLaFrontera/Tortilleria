@@ -23,6 +23,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // modificacion de funcion original del toggle de carrito
+    document.querySelector('.cart-toggle')?.addEventListener('click', function(e) {
+        if (window.innerWidth > 768) { // solo pa pc
+            e.preventDefault();
+            document.querySelector('.cart-content').classList.toggle('show');
+        }
+    });
+    
+    // cerrar dropdown al hacer click afuera
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.cart-dropdown')) {
+            document.querySelector('.cart-content')?.classList.remove('show');
+        }
+    });
+    
     // Assign event listeners
     document.querySelector('.menu').addEventListener('click', abrirmenu);
     document.querySelector('.cambiar-form').addEventListener('click', cambiarform);

@@ -38,17 +38,37 @@ class CartController {
     }
 
     // Consultar contenido de carrito
+    // public function getCart($userId) {
+    //     $stmt = $this->db->prepare("
+    //         SELECT c.id, p.nombre, p.descripcion, p.imagen, c.cantidad 
+    //         FROM carrito c
+    //         JOIN productos p ON c.producto_id = p.id
+    //         WHERE c.user_id = ?
+    //     ");
+    //     $stmt->execute([$userId]);
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
     public function getCart($userId) {
         $stmt = $this->db->prepare("
-            SELECT c.id, c.cantidad, p.id as producto_id, p.nombre, p.descripcion, p.precio, p.imagen 
-            FROM carrito c 
-            JOIN productos p ON c.producto_id = p.id 
+            SELECT c.id, p.nombre, p.imagen, c.cantidad 
+            FROM carrito c
+            JOIN productos p ON c.producto_id = p.id
             WHERE c.user_id = ?
         ");
         $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: []; // Always return array
     }
 
+    public function getCartCount($userId) {
+        $stmt = $this->db->prepare("
+            SELECT SUM(cantidad) as total_items 
+            FROM carrito 
+            WHERE user_id = ?
+        ");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total_items'] ?? 0; // 0 si esta vacio
+    }
     // Actualizar contenido de carrito
     public function updateCantidad($cartId, $userId, $quantity) {
         if ($quantity <= 0) {
