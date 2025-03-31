@@ -106,7 +106,9 @@ class UserController {
                         // Iniciar sesión
                         $_SESSION['user_id'] = $this->user->id;
                         $_SESSION['username'] = $this->user->username;
-                        
+                         
+                        global $cartController;
+                        $cartController->setUserId($this->user->id);
                         // Redirigir al dashboard
                         header("Location: index.php");
                         exit;

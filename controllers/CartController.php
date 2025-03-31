@@ -1,62 +1,78 @@
 <?php
+
 class CartController {
     private $db;
-
-    public function __construct($db) {
+    private $cart;
+    public function __construct($db, $userId) {
         $this->db = $db;
+        require_once './models/Cart.php';
+
+        //Check de existencia de usuario
+        if ($userId) {
+            $this->cart = new Cart($db, $userId);
+        } else {
+            $this->cart = null;
+        }
+        
+    }
+    public function setUserId($userId) {
+        $this->cart = $userId ? new Cart($this->db, $userId) : null;
     }
 
     //agregar producto
-    public function addToCart($userId, $productId, $cantidad = 1) {
-        $product = $this->getProduct($productId);
-        if (!$product) {
-            return ['success' => false, 'message' => 'Producto no encontrado'];
+    public function addToCart($productId, $quantity = 1) {
+        try {
+            $success = $this->cart->addItem($productId, $quantity);
+            return [
+                'success' => $success,
+                'count' => $this->cart->getTotalItems(),
+                'message' => $success ? 'Producto agregado' : 'No se pudo agregar el producto'
+            ];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error en base de datos'];
         }
-
-        // revisar si existe en el carrito
-        $existeProducto = $this->db->prepare("SELECT * FROM carrito WHERE user_id = ? AND producto_id = ?");
-        $articulo = $existeProducto->fetch();
-
-        if ($articulo) {
-            //actualizar cantidad si ya existe en carrito
-            $nvoCantidad = $articulo['cantidad'] + $cantidad;
-            $stmt = $this->db->prepare("UPDATE carrito SET cantidad = ? WHERE id = ?");
-            $stmt->execute([$nvoCantidad, $articulo['id']]);
-        } else {
-            // Si no existe el articulo en carrito se agrega
-            $stmt = $this->db->prepare("INSERT INTO carrito (user_id, producto_id, cantidad) VALUES (?, ?, ?)");
-            $stmt->execute([$userId, $productId, $cantidad]);
-        }
-        return ['success' => true, 'message' => 'Producto añadido al carrito'];
     }
 
     //remover producto
-    public function removerDeCarrito($cartId, $userId) {
-        $stmt = $this->db->prepare("DELETE FROM carrito WHERE id = ? AND user_id = ?");
-        $stmt->execute([$cartId, $userId]);
-        return $stmt->rowCount() > 0;
+    public function removeFromCart($cartItemId) {
+        try {
+            $success = $this->cart->removeItem($cartItemId);
+            return [
+                'success' => $success,
+                'count' => $this->cart->getTotalItems(),
+                'message' => $success ? 'Producto eliminado' : 'No se pudo eliminar el producto'
+            ];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error en base de datos'];
+        }
     }
 
-    // Consultar contenido de carrito
-    // public function getCart($userId) {
-    //     $stmt = $this->db->prepare("
-    //         SELECT c.id, p.nombre, p.descripcion, p.imagen, c.cantidad 
-    //         FROM carrito c
-    //         JOIN productos p ON c.producto_id = p.id
-    //         WHERE c.user_id = ?
-    //     ");
-    //     $stmt->execute([$userId]);
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
-    public function getCart($userId) {
-        $stmt = $this->db->prepare("
-            SELECT c.id, p.nombre, p.imagen, c.cantidad 
-            FROM carrito c
-            JOIN productos p ON c.producto_id = p.id
-            WHERE c.user_id = ?
-        ");
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: []; // Always return array
+    //vaciar productos
+    public function cleanCart() {
+        try {
+            $success = $this->cart->removeAllItems();
+            return [
+                'success' => $success,
+                'count' => $this->cart->getTotalItems(),
+                'message' => $success ? 'Carrito vaciado' : 'No se pudo vaciar los productos'
+            ];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error en base de datos'];
+        }
+    }
+    
+    public function getCart($returnFullResponse = false) {
+        if (!$this->cart) {
+            return $returnFullResponse ? ['success' => false, 'message' => 'User not logged in'] : [];
+        }
+        
+        $response = [
+            'success' => true,
+            'items' => $this->cart->getItems(),
+            'count' => $this->cart->getTotalItems()
+        ];
+        
+        return $returnFullResponse ? $response : $response['items'];
     }
 
     public function getCartCount($userId) {
@@ -69,15 +85,30 @@ class CartController {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total_items'] ?? 0; // 0 si esta vacio
     }
-    // Actualizar contenido de carrito
-    public function updateCantidad($cartId, $userId, $quantity) {
-        if ($quantity <= 0) {
-            return $this->removerDeCarrito($cartId, $userId);
-        }
 
-        $stmt = $this->db->prepare("UPDATE carrito SET cantidad = ? WHERE id = ? AND user_id = ?");
-        $stmt->execute([$quantity, $cartId, $userId]);
-        return $stmt->rowCount() > 0;
+    // Ver total (Por implementar)
+    public function getCartTotal() {
+        if (!$this->cart) return 0;
+        $items = $this->cart->getItems();
+        $total = 0;
+        // foreach ($items as $item) {
+        //     // Assuming you have price in your items
+        //     $total += ($item['precio'] ?? 0) * ($item['cantidad'] ?? 1);
+        // }
+        return $total;
+    }
+    // Actualizar contenido de carrito
+    public function updateCantidad($cartItemId, $newQuantity) {
+        try {
+            $success = $this->cart->updateQuantity($cartItemId, $newQuantity);
+            return [
+                'success' => $success,
+                'count' => $this->cart->getTotalItems(),
+                'message' => $success ? 'Cantidad actualizada' : 'No se pudo actualizar la cantidad'
+            ];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error en base de datos'];
+        }
     }
 
     // Helper function to get product

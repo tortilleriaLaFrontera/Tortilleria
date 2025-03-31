@@ -28,6 +28,11 @@ class HomeController {
     
     public function productos() {
         $currentPage = 'productos';
+
+        //uso de productcontroller para recibir productos
+        global $productController;
+        $products = $productController->listProducts();
+
         include_once './views/templates/header.php';
         include_once './views/productos.php';
         include_once './views/templates/footer.php';

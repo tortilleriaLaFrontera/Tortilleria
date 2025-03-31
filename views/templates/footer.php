@@ -7,8 +7,9 @@
         </section>
     <?php endif; ?>
     <script src="./js/validation.js"></script>
-    <?php if($page === 'productos'): ?>
-        <script src="./js/agregarProducto.js"></script>
+    <?php if(isset($_SESSION['user_id'])): ?>
+        <script src="./js/app.js"></script>
+        <script src="./js/gestionCarrito.js"></script>
     <?php endif; ?>
 </body>
 </html>

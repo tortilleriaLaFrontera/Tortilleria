@@ -60,69 +60,8 @@ header {
     position: relative;
 }
 /* #region user logged in */
-/* #region ventana carrito emergente OLD */
-
-
-/* Dropdown cart specific styles */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    min-width: 300px;
-    z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    padding: 10px;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Prevent page jump when cart loads */
-.cart-dropdown-view {
-    max-height: 400px;
-    overflow-y: auto;
-}
-.cart-dropdown-view .cart-item {
-    padding: 8px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-}
-
-.cart-dropdown-view .cart-item-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 120px;
-}
-
-.cart-dropdown-view .cart-actions {
-    margin-top: 10px;
-    text-align: center;
-}
-
-.cart-dropdown-view .view-cart {
-    display: inline-block;
-    padding: 5px 10px;
-    background: var(--accent-clr);
-    color: white;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-/* #endregion */
 /* #region dropdowns */
-
-/* ===== CART DROPDOWN STYLES ===== */
-/* Base dropdown styles (shared between cart and profile) */
+/* ===== DROPDOWN BASE STYLES ===== */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -141,15 +80,20 @@ header {
     max-height: 70vh;
     overflow-y: auto;
 }
-
-.dropdown:hover .dropdown-content {
+.dropdown-content.show {
     display: block;
+    
 }
 
-/* Cart-specific styles */
+/* ===== CART-SPECIFIC STYLES ===== */
 .cart-dropdown .dropdown-content {
     padding: 12px;
-    width: 320px; /* Slightly wider for better item display */
+    width: 320px;
+    min-width: 300px;
+}
+
+.cart-dropdown-view {
+    max-height: 400px;
 }
 
 .cart-item {
@@ -159,6 +103,7 @@ header {
     padding: 8px 0;
     border-bottom: 1px solid #eee;
     gap: 12px;
+    font-size: 0.9rem;
 }
 
 .cart-item:last-child {
@@ -170,7 +115,7 @@ header {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.9rem;
+    max-width: 120px;
 }
 
 .cart-item-qty {
@@ -227,6 +172,7 @@ header {
     justify-content: center;
     line-height: 1;
 }
+
 .cart-icon-wrapper {
     position: relative;
     display: inline-block;
