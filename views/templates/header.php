@@ -28,6 +28,8 @@
             case 'register':
                 echo '<link rel="stylesheet" href="css/cont-registro.css">';
                 break;
+            case 'perfil':
+                echo '<link rel="stylesheet" href="css/cont-perfil.css">';
             default: // index and any other pages
                 echo '<link rel="stylesheet" href="css/cont-index.css">';
         }
@@ -86,8 +88,8 @@
                                 <div class="dropdown-content cart-content">
                                     <?php 
                                     // Seccion para visualizar el carrito cuando haces hover (se suponsio)
-                                    if(isset($_SESSION['user_id']) && isset($cartController)) {
-                                        $cartItems = $cartController->getCart();
+                                    if(isset($_SESSION['user_id'])) {
+                                        // $cartItems = 
                                         $isDropdown = true;
                                         include './views/cart.php';
                                     }
@@ -101,7 +103,7 @@
                                     <img class="userBtns" src="img/phone-icon.png" style="border-radius: 50%;" alt="profile">
                                 </a>
                                 <div class="dropdown-content profile-content">
-                                    <a href="index.php?action=profile">Mi Perfil</a>
+                                    <a href="index.php?action=perfil">Mi Perfil</a>
                                     <a href="index.php?action=logout">Cerrar Sesión</a>
                                 </div>
                             </div>

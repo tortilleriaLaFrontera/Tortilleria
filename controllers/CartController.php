@@ -16,7 +16,13 @@ class CartController {
         
     }
     public function setUserId($userId) {
-        $this->cart = $userId ? new Cart($this->db, $userId) : null;
+        require_once './models/Cart.php';
+        
+        if ($userId) {
+            $this->cart = new Cart($this->db, $userId);
+        } else {
+            $this->cart = null;
+        }
     }
 
     //agregar producto
@@ -34,16 +40,15 @@ class CartController {
     }
 
     //remover producto
-    public function removeFromCart($cartItemId) {
+    public function removeFromCart($itemId) {
         try {
-            $success = $this->cart->removeItem($cartItemId);
+            $success = $this->cart->removeItem($itemId);
             return [
                 'success' => $success,
-                'count' => $this->cart->getTotalItems(),
-                'message' => $success ? 'Producto eliminado' : 'No se pudo eliminar el producto'
+                'message' => $success ? 'Item removed' : 'Failed to remove item'
             ];
-        } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Error en base de datos'];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Error'];
         }
     }
 

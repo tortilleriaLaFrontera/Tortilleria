@@ -44,6 +44,12 @@ class HomeController {
         include_once './views/contacto.php';
         include_once './views/templates/footer.php';
     }
+    public function perfil() {
+        $currentPage = 'perfil';
+        include_once './views/templates/header.php';
+        include_once './views/perfil.php';
+        include_once './views/templates/footer.php';
+    }
     public function showRegisterForm() {
         $currentPage = 'register';//nvo
         include_once './views/templates/header.php';//nvo

@@ -59,9 +59,52 @@ switch($action) {
         $homeController->contacto();
         break;
     
-    
+    case 'perfil':
+        // Navegar a pagina perfil
+        $homeController->perfil();
+        break;
     case 'cart_view':
-    case 'cart':
+        checkForUser($userController);
+        $cartData = $cartController->getCart(true);
+        
+        if ($cartData['success']) {
+            $cartItems = $cartData['items'];
+            
+            // Handle AJAX requests (dropdown)
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                ob_start();
+                include './views/cart.php';
+                sendJsonResponse([
+                    'success' => true,
+                    'cartHtml' => ob_get_clean()
+                ]);
+            }
+            // Full page render (non-AJAX)
+            else {
+                include_once './views/templates/header.php';
+                include_once './views/cart.php';
+                include_once './views/templates/footer.php';
+            }
+        } else {
+            $homeController->index();
+        }
+        break;
+    case 'cart': 
+        checkForUser($userController);
+        $cartItems = $cartController->getCart()['items'];
+
+        // Check if it's an AJAX request and return JSON if needed
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            ob_start();
+            include './views/cart.php';
+            sendJsonResponse(['cartHtml' => ob_get_clean()]);
+        }
+
+        include './views/templates/header.php';
+        include './views/cart.php';
+        include './views/templates/footer.php';
+        exit();
     case 'view_cart': // Utiliza ambos para compatibilidad
         checkForUser($userController);
         $cartData = $cartController->getCart(true);
@@ -93,20 +136,27 @@ switch($action) {
         
 
     case 'cart_remove':    
-    case 'remove_from_cart':
         checkForUser($userController);
         
-        // sacar producto de carrito
+        // Remove item from cart
         $cartItemId = $_POST['cart_id'] ?? 0;
-        $cartController->removeFromCart($cartItemId);
-
-        // respuesta con carrito actualizado para AJAX
-        $cartItems = $cartController->getCart()['items'];
+        $removeResult = $cartController->removeFromCart($cartItemId); // This should return success status
+        
+        // Get updated cart
+        $cartData = $cartController->getCart();
+        if (!isset($cartData['items'])) {
+            $cartData['items'] = []; // Ensure items array exists
+        }
+        
+        // Prepare response
         ob_start();
         include './views/cart.php';
+        $cartHtml = ob_get_clean();
+        
         sendJsonResponse([
-            'success' => $response['success'],
-            'cartHtml' => ob_get_clean()
+            'success' => $removeResult['success'] ?? false,
+            'cartHtml' => $cartHtml,
+            'count' => $cartController->getCartCount($_SESSION['user_id'] ?? 0)
         ]);
         exit();
     

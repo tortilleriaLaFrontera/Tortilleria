@@ -26,9 +26,7 @@ $isDropdown = $isDropdown ?? false;
                 <span class="cart-item-name"><?= htmlspecialchars($item['nombre'] ?? '') ?></span>
                 <span class="cart-item-qty">x<?= $item['cantidad'] ?? 1 ?></span>
                 
-                <a href="index.php?action=remove_from_cart&id=<?= $item['id'] ?><?= $isDropdown ? '&from_dropdown=1' : '' ?>" 
-                   class="cart-item-remove" 
-                   onclick="return confirm('¿Eliminar este artículo?')">🗑️</a>
+                <a href="#" class="cart-item-remove" data-cart-id="<?= $item['id'] ?>">🗑️</a>
             </div>
         <?php endforeach; ?>
 

@@ -19,6 +19,7 @@
     --banner-txt-clr: #FFFFFF;
     --message-bg-clr: #573a09b4;
     --active-index-clr: #e6cab8;
+    --transparent-box-clr: rgba(238, 238, 238, 0.774);
 }
 /*#endregion*/
 /*#region estructura base*/
@@ -104,6 +105,13 @@ header {
     border-bottom: 1px solid #eee;
     gap: 12px;
     font-size: 0.9rem;
+    > img {
+        max-width: 30%;
+    }
+}
+.cart-item img {
+    max-width: 30%;
+    width: 30%;
 }
 
 .cart-item:last-child {
@@ -159,9 +167,9 @@ header {
 /* Cart counter bubble */
 .cart-count {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: var(--accent-clr);
+    top:53px;
+    right: 53px;
+    background-color: var(--base-subtext-clr);
     color: white;
     border-radius: 50%;
     width: 18px;

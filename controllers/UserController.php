@@ -132,10 +132,14 @@ class UserController {
     }
     
     public function logout() {
-        // Destruir la sesión
+        global $cartController;
+        $cartController->setUserId(null); // This will set $this->cart to null
+        
+        // Destroy session
+        $_SESSION = [];
         session_destroy();
         
-        // Redirigir al login
+        // Redirect
         header("Location: index.php");
         exit;
     }

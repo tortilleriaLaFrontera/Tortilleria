@@ -19,6 +19,21 @@ document.addEventListener('DOMContentLoaded', function () {
     // =====================
     // DROPDOWN
     // =====================
+    function viewCart() {
+        fetch('index.php?action=cart_view', {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.querySelector('.cart-content').innerHTML = data.cartHtml;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.querySelector('.cart-content').innerHTML = 
+                '<div class="cart-error">Error loading cart</div>';
+        });
+    }
+    
     function toggleDropdown(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -31,6 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Toggle current dropdown
         content.classList.toggle('show');
+
+        if (this.classList.contains('cart-toggle') && content.classList.contains('show')) {
+            viewCart(); // Make sure viewCart() is available in scope
+        }
     }
 
     function closeAllDropdowns(exceptThisOne = null) {
