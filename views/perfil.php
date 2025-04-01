@@ -42,9 +42,9 @@
             <br><br><br><br>
         </div>
         <nav class="user-nav">
-            <button class="nav-button" onclick="location.href='/Tortilleria/index.php?action=cartdetails'">Canasta</button>
-            <button class="nav-button" onclick="location.href='/Tortilleria/index.php?action=checkout'">Pedidos</button>
-            <button class="nav-button" onclick="location.href='/Tortilleria/index.php?action=perfil'">Información de usuario</button>
+            <button class="nav-button">Canasta</button>
+            <button class="nav-button">Pedidos</button>
+            <button class="nav-button">Información de usuario</button>
         </nav>
     </div>
 </div>

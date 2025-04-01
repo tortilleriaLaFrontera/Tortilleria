@@ -1,9 +1,14 @@
-document.querySelectorAll('.nav-button').forEach(button => {
-    button.addEventListener('click', function() {
-        const view = this.dataset.view;
-        window.history.pushState({}, '', `perfil.php?view=${view}`);
-        loadProfileView(view);
-    });
+document.querySelector('.user-nav').addEventListener('click', (e) => {
+    if (e.target.classList.contains('nav-button')) {
+        e.preventDefault();
+        const action = e.target.textContent.trim().toLowerCase();
+        const actionMap = {
+            'canasta': 'cartdetails',
+            'pedidos': 'checkout',
+            'información de usuario': 'perfil'
+        };
+        window.location.href = `index.php?action=${actionMap[action]}`;
+    }
 });
 
 function loadProfileView(view) {
