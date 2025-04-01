@@ -18,6 +18,23 @@
     border-right: 1px solid rgba(245, 245, 245, 0.8);
     padding: 1rem;
 }
+/* Checkout section */
+.checkout-step {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.checkout-step.active {
+    display: block;
+}
+
+.checkout-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
 
 /* Right section (30% width) */
 .perfil-right {

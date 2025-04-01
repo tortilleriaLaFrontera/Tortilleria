@@ -30,6 +30,7 @@
                 break;
             case 'perfil':
                 echo '<link rel="stylesheet" href="css/cont-perfil.css">';
+                echo '<script src="js/perfil.js" defer></script>';
             default: // index and any other pages
                 echo '<link rel="stylesheet" href="css/cont-index.css">';
         }

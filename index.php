@@ -63,6 +63,21 @@ switch($action) {
         // Navegar a pagina perfil
         $homeController->perfil();
         break;
+    case 'checkout':
+        checkForUser($userController);
+
+        //verificacion de que no este vacio el carrito
+        $cartData = $cartController->getCart();
+        if (empty($cartData['items'])) {
+            header('Location: index.php?action=cart');
+            exit;
+        }
+
+        //guardado del source
+        $_SESSION['checkout_source'] = $_GET['source'] ?? 'cart';
+
+        header('Location: perfil.php?view=checkout');
+        exit;
     case 'cart_view':
         checkForUser($userController);
         $cartData = $cartController->getCart(true);
