@@ -1,10 +1,29 @@
 <?php
+// database.php
 class Database {
-    private $host = "localhost";
-    private $db_name = "tortilleria";
-    private $username = "root";
-    private $password = "";
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     public $conn;
+
+    public function __construct() {
+        
+        $config = @include __DIR__ . '/../config/config.php';
+
+        if ($config) {
+            $this->host     = $config['database']['host'];
+            $this->db_name = $config['database']['dbname'];
+            $this->username = $config['database']['username'];
+            $this->password = $config['database']['password'];
+        } else {
+            // Fallback to hardcoded values (for local dev)
+            $this->host     = 'localhost';
+            $this->db_name  = 'local_db';
+            $this->username = 'root';
+            $this->password = '';
+        }
+    }
     
     public function getConnection() {
         $this->conn = null;
