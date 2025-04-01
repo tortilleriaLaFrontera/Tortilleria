@@ -35,7 +35,12 @@ class CartController {
                 'message' => $success ? 'Producto agregado' : 'No se pudo agregar el producto'
             ];
         } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Error en base de datos'];
+            error_log("Cart Error: " . $e->getMessage()); // Log for debugging
+            return [
+                'success' => false,
+                'message' => 'Database error',
+                'error' => $e->getMessage() // Only in dev environment
+            ];
         }
     }
 
@@ -96,10 +101,10 @@ class CartController {
         if (!$this->cart) return 0;
         $items = $this->cart->getItems();
         $total = 0;
-        // foreach ($items as $item) {
-        //     // Assuming you have price in your items
-        //     $total += ($item['precio'] ?? 0) * ($item['cantidad'] ?? 1);
-        // }
+        foreach ($items as $item) {
+            // Assuming you have price in your items
+            $total += ($item['costo'] ?? 0) * ($item['cantidad'] ?? 1);
+        }
         return $total;
     }
     // Actualizar contenido de carrito

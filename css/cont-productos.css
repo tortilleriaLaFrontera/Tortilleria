@@ -36,21 +36,31 @@ main {
     max-width: 80%;
     font-weight: 500;
 }
-.aCanasta {
+.producto-seller {
+    min-width: 10%;
+    display: flex;
+    
+}
+.cart-precio {
+    text-wrap: nowrap;
+    align-self: center;
+    padding-right: 8px;
+}
+.cart-button {
     transition: transform 0.2s, background-color 0.2s;
     padding: 5px;
     align-self:flex-end;
-    width: 8%;
-    height: 50px;
+    width: 40%;
+    height: 37px;
     border-radius: 12px;
     background-color: var(--base-subtext-clr);
     cursor: pointer;
 }
-.aCanasta:hover {
+.cart-button:hover {
     background-color: var(--base-text-clr);
     transform: scale(1.1);
 }
-.aCanasta:active {
+.cart-button:active {
     transform: scale(0.95);
 }
 

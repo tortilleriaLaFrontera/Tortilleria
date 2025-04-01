@@ -119,7 +119,7 @@ switch($action) {
         break;
 
     case 'cart_update':
-    case 'update_cart':
+    
         checkForUser($userController);
         
         // actualizar el carrito
@@ -184,22 +184,33 @@ switch($action) {
         include './views/cart.php';
         sendJsonResponse(['cartHtml' => ob_get_clean()]);
         exit();
+    case 'test_add':
+        $result = $cart->addItem($_GET['producto_id'], 1);
+        var_dump($result);
+        exit;
     case 'cart_add':
-    case 'add_to_cart':
         checkForUser($userController);
         
         // Agrega producto a carrito
         $productId = (int)($_POST['product_id'] ?? 0);
         $response = $cartController->addToCart($productId);
 
-        // espuesta con carrito actualizado para AJAX
-        $cartItems = $cartController->getCart()['items'];
-        ob_start();
-        include './views/cart.php';
-        sendJsonResponse([
-            'success' => $response['success'],
-            'cartHtml' => ob_get_clean()
-        ]);
+        
+        if ($response['success']) {
+            ob_start();
+            include './views/cart.php';
+            $response['cartHtml'] = ob_get_clean();
+        }
+        
+        sendJsonResponse($response);
+        // // respuesta con carrito actualizado para AJAX
+        // $cartItems = $cartController->getCart()['items'];
+        // ob_start();
+        // include './views/cart.php';
+        // sendJsonResponse([
+        //     'success' => $response['success'],
+        //     'cartHtml' => ob_get_clean()
+        // ]);
         exit();
     default:
         // lleva al index
