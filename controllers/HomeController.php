@@ -46,6 +46,25 @@ class HomeController {
     }
     public function perfil() {
         $currentPage = 'perfil';
+        $currentWindow = 'perfil';
+        include_once './views/templates/header.php';
+        include_once './views/perfil.php';
+        include_once './views/templates/footer.php';
+    }
+    public function checkout() {
+        $currentPage = 'perfil';
+        $currentWindow = 'checkout';
+        include_once './views/templates/header.php';
+        include_once './views/perfil.php';
+        include_once './views/templates/footer.php';
+    }
+    public function cartdetails() {
+        $currentPage = 'perfil';
+        $currentWindow = 'carrito';
+        
+        
+
+        
         include_once './views/templates/header.php';
         include_once './views/perfil.php';
         include_once './views/templates/footer.php';

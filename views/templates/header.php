@@ -30,6 +30,13 @@
                 break;
             case 'perfil':
                 echo '<link rel="stylesheet" href="css/cont-perfil.css">';
+                $window = $currentWindow ?? 'perfil';
+                switch ($window) 
+                {
+                    case 'perfil': echo '<link rel="stylesheet" href="css/perfil-userdetails.css">'; break;
+                    case 'carrito': echo '<link rel="stylesheet" href="css/perfil-cartdetails.css">'; break;
+                    case 'checkout': echo '<link rel="stylesheet" href="css/perfil-checkout.css">'; break;
+                }
                 echo '<script src="js/perfil.js" defer></script>';
             default: // index and any other pages
                 echo '<link rel="stylesheet" href="css/cont-index.css">';

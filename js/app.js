@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         content.classList.toggle('show');
 
         if (this.classList.contains('cart-toggle') && content.classList.contains('show')) {
-            viewCart(); // Make sure viewCart() is available in scope
+            viewCart(); 
         }
     }
 
