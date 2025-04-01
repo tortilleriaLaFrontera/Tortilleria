@@ -47,6 +47,9 @@ class HomeController {
     public function perfil() {
         $currentPage = 'perfil';
         $currentWindow = 'perfil';
+
+        global $userController;
+
         include_once './views/templates/header.php';
         include_once './views/perfil.php';
         include_once './views/templates/footer.php';

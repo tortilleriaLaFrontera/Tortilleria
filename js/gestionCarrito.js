@@ -1,44 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    //#region funciones
-    // AJAX gestion de carrito
-    // function updateCart(action, data) {
-    //     return fetch(`index.php?action=${action}`, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/x-www-form-urlencoded",
-    //             "X-Requested-With": "XMLHttpRequest"
-    //         },
-    //         body: new URLSearchParams(data).toString()
-    //     })
-    //     .then(response => {
-    //         if (!response.ok) throw new Error('Network error');
-    //         return response.json();
-    //     })
-    //     .then(data => {
-    //         if (data.success) {
-    //             // Update cart display
-    //             if (data.cartHtml) {
-    //                 document.querySelectorAll(".cart-content").forEach(container => {
-    //                     container.innerHTML = data.cartHtml;
-    //                 });
-    //             }
-    //             // Update counter
-    //             if (data.count !== undefined) {
-    //                 document.querySelectorAll('.cart-count').forEach(el => {
-    //                     el.textContent = data.count;
-    //                 });
-    //             }
-    //         }
-    //         return data;
-    //     })
-    //     .catch(error => {
-    //         console.error("Error:", error);
-    //         alert("Error updating cart");
-    //         throw error;
-    //     });
-    // }
-    // funcion AJAX para agregar a carrito - OLD
+    
     function updateCart(action, data) {
         return fetch(`index.php?action=${action}`, {
             method: "POST",

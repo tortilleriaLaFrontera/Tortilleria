@@ -108,7 +108,7 @@
                             <!-- User Profile Dropdown -->
                             <div class="dropdown profile-dropdown">
                                 <a class="profile-toggle" href="javascript:void(0)">
-                                    <img class="userBtns" src="img/phone-icon.png" style="border-radius: 50%;" alt="profile">
+                                    <img class="userBtns" src="img/profile-picture.png" style="border-radius: 50%;" alt="profile">
                                 </a>
                                 <div class="dropdown-content profile-content">
                                     <a href="index.php?action=perfil">Mi Perfil</a>

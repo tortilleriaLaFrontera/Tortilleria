@@ -1,7 +1,7 @@
 <?php
 class UserController {
     private $db;
-    private $user;
+    public $user;
     
     public function __construct($db) {
         $this->db = $db;
@@ -106,6 +106,9 @@ class UserController {
                         // Iniciar sesión
                         $_SESSION['user_id'] = $this->user->id;
                         $_SESSION['username'] = $this->user->username;
+                        $_SESSION['email'] = $this->user->email;
+                        $_SESSION['telefono'] = $this->user->telefono;
+                        $_SESSION['direccion'] = $this->user->direccion;
                          
                         global $cartController;
                         $cartController->setUserId($this->user->id);

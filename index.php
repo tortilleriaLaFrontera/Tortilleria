@@ -85,7 +85,8 @@ switch($action) {
                 include './views/cart.php';
                 sendJsonResponse([
                     'success' => true,
-                    'cartHtml' => ob_get_clean()
+                    'cartHtml' => ob_get_clean(),
+                    
                 ]);
             }
             // Full page render (non-AJAX)

@@ -1,3 +1,85 @@
+class CartManager {
+    static async getCartData() {
+        try {
+            const response = await fetch('index.php?action=cart_view', {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+            return await response.json();
+        } catch (error) {
+            console.error("Cart fetch error:", error);
+            return { success: false, error: "Error loading cart" };
+        }
+    }
+
+    static async refreshCartDisplay(containerSelector = '.cart-content') {
+        const data = await this.getCartData();
+        const container = document.querySelector(containerSelector);
+        
+        if (data.success && container) {
+            container.innerHTML = data.cartHtml;
+            return data.count || 0;
+        } else if (container) {
+            container.innerHTML = data.error || '<div class="cart-error">Error loading cart</div>';
+        }
+        return 0;
+    }
+}
+class ProfileManager {
+    constructor() {
+        this.initCartHandlers();
+    }
+
+    initCartHandlers() {
+        // For cart details (canasta)
+        if (document.querySelector('#canasta-tab')) {
+            this.loadCartDetails();
+        }
+
+        // For checkout
+        if (document.querySelector('#checkout-tab')) {
+            this.loadCheckoutCart();
+        }
+    }
+
+    async loadCartDetails() {
+        const data = await CartManager.getCartData();
+        const container = document.querySelector('.left-body-content');
+        
+        if (data.success) {
+            // Render cart details specific view
+            container.innerHTML = this.createCartDetailsView(data.items);
+            this.initQuantityControls();
+        }
+    }
+
+    createCartDetailsView(items) {
+        return `
+            <div class="cart-details-view">
+                ${items.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.imagen}" alt="${item.nombre}">
+                        <div class="item-info">
+                            <h4>${item.nombre}</h4>
+                            <div class="item-controls">
+                                <button class="qty-btn minus" data-id="${item.id}">-</button>
+                                <span>${item.cantidad}</span>
+                                <button class="qty-btn plus" data-id="${item.id}">+</button>
+                            </div>
+                        </div>
+                        <span class="item-price">$${(item.costo * item.cantidad).toFixed(2)}</span>
+                    </div>
+                `).join('')}
+                <div class="cart-total">
+                    Total: $${data.total || 0}
+                </div>
+            </div>
+        `;
+    }
+
+    initQuantityControls() {
+        // Add your quantity change handlers here
+    }
+}
 document.querySelector('.user-nav').addEventListener('click', (e) => {
     if (e.target.classList.contains('nav-button')) {
         e.preventDefault();
@@ -11,70 +93,9 @@ document.querySelector('.user-nav').addEventListener('click', (e) => {
     }
 });
 
-function loadProfileView(view) {
-    fetch(`perfil.php?view=${view}&ajax=1`)
-        .then(response => response.text())
-        .then(html => {
-            document.querySelector('.left-body-content').innerHTML = html;
-        });
-}
 
-// Handle back/forward navigation
-window.addEventListener('popstate', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const view = urlParams.get('view') || 'default';
-    loadProfileView(view);
-});
-
-class ProfileManager {
-    constructor() {
-        this.currentSection = document.querySelector('.perfil-left h2').textContent.toLowerCase();
-        this.initSectionSpecificHandlers();
-    }
-    
-    initSectionSpecificHandlers() {
-        switch(this.currentSection) {
-            case 'carrito':
-                this.initCartHandlers();
-                break;
-            case 'checkout':
-                this.initCheckoutHandlers();
-                break;
-            // ... other sections
-        }
-    }
-    
-    initCartHandlers() {
-        // Quantity controls
-        document.querySelectorAll('.qty-btn').forEach(btn => {
-            btn.addEventListener('click', this.handleQuantityChange);
-        });
-        
-        // Removal handlers
-        document.querySelectorAll('.remove-item').forEach(btn => {
-            btn.addEventListener('click', this.handleItemRemoval);
-        });
-    }
-    
-    handleQuantityChange(e) {
-        const itemId = this.dataset.itemId;
-        const action = this.classList.contains('plus') ? 'increase' : 'decrease';
-        
-        fetch(`index.php?action=update_qty`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `item_id=${itemId}&action=${action}`
-        }).then(/* ... */);
-    }
-    
-    handleItemRemoval(e) {
-        // ... existing removal logic
-    }
-    
-    // ... other section handlers
-}
 
 // Initialize when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-    new ProfileManager();
+    
 });
