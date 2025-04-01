@@ -135,29 +135,19 @@ switch($action) {
         exit();
         
 
-    case 'cart_remove':    
+    case 'cart_remove':
         checkForUser($userController);
         
-        // Remove item from cart
-        $cartItemId = $_POST['cart_id'] ?? 0;
-        $removeResult = $cartController->removeFromCart($cartItemId); // This should return success status
+        $cartItemId = (int)($_POST['cart_id'] ?? 0);
+        $response = $cartController->removeFromCart($cartItemId);
         
-        // Get updated cart
-        $cartData = $cartController->getCart();
-        if (!isset($cartData['items'])) {
-            $cartData['items'] = []; // Ensure items array exists
+        if ($response['success']) {
+            ob_start();
+            include './views/cart.php';
+            $response['cartHtml'] = ob_get_clean();
         }
         
-        // Prepare response
-        ob_start();
-        include './views/cart.php';
-        $cartHtml = ob_get_clean();
-        
-        sendJsonResponse([
-            'success' => $removeResult['success'] ?? false,
-            'cartHtml' => $cartHtml,
-            'count' => $cartController->getCartCount($_SESSION['user_id'] ?? 0)
-        ]);
+        sendJsonResponse($response);
         exit();
     
     case 'cart_clean':
@@ -184,10 +174,6 @@ switch($action) {
         include './views/cart.php';
         sendJsonResponse(['cartHtml' => ob_get_clean()]);
         exit();
-    case 'test_add':
-        $result = $cart->addItem($_GET['producto_id'], 1);
-        var_dump($result);
-        exit;
     case 'cart_add':
         checkForUser($userController);
         

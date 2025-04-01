@@ -42,11 +42,22 @@ class Cart {
     }
     //eliminar de carrito
     public function removeItem($cartItemId) {
-        $stmt = $this->conn->prepare("
-            DELETE FROM carrito
-            WHERE id = ? AND user_id = ?
-        ");
-        return $stmt->execute([$cartItemId, $this->userId]);
+        // Validate input
+        if (!is_numeric($cartItemId) || $cartItemId <= 0) {
+            error_log("Invalid cart item ID: $cartItemId");
+            return false;
+        }
+    
+        try {
+            $stmt = $this->conn->prepare("
+                DELETE FROM carrito 
+                WHERE id = ? AND user_id = ?
+            ");
+            return $stmt->execute([$cartItemId, $this->userId]);
+        } catch (PDOException $e) {
+            error_log("Remove Item Error: " . $e->getMessage());
+            return false;
+        }
     }
 
     //vaciar carrito

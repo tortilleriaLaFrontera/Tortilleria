@@ -47,13 +47,24 @@ class CartController {
     //remover producto
     public function removeFromCart($itemId) {
         try {
+            if (!is_numeric($itemId) || $itemId <= 0) {
+                throw new InvalidArgumentException("Invalid cart item ID");
+            }
+    
             $success = $this->cart->removeItem($itemId);
+            
             return [
                 'success' => $success,
+                'count' => $this->cart->getTotalItems(),
                 'message' => $success ? 'Item removed' : 'Failed to remove item'
             ];
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Error'];
+            error_log("Controller Remove Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Database error',
+                'count' => $this->cart->getTotalItems()
+            ];
         }
     }
 

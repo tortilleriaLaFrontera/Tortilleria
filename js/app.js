@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             document.querySelector('.cart-content').innerHTML = data.cartHtml;
+
+            if (data.count === 0) {
+                document.querySelector('.dropdown-content').classList.remove('show');
+            }
         })
         .catch(error => {
             console.error("Error:", error);
