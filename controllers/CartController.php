@@ -107,7 +107,7 @@ class CartController {
         return $result['total_items'] ?? 0; // 0 si esta vacio
     }
 
-    // Ver total (Por implementar)
+    // Ver total $
     public function getCartTotal() {
         if (!$this->cart) return 0;
         $items = $this->cart->getItems();
@@ -119,9 +119,9 @@ class CartController {
         return $total;
     }
     // Actualizar contenido de carrito
-    public function updateCantidad($cartItemId, $newQuantity) {
+    public function updateCantidad($cartItemId, $offsetQuantity) {
         try {
-            $success = $this->cart->updateQuantity($cartItemId, $newQuantity);
+            $success = $this->cart->updateQuantity($cartItemId, $offsetQuantity);
             return [
                 'success' => $success,
                 'count' => $this->cart->getTotalItems(),
@@ -131,12 +131,85 @@ class CartController {
             return ['success' => false, 'message' => 'Error en base de datos'];
         }
     }
-
+    public function getCartFull() {
+        $cartModel = new Cart($this->db, $_SESSION['user_id']);
+        $items = $cartModel->getFullCartItems();  // todos los datos del producto en carrito
+        
+        return [
+            'success' => true,
+            'items' => $items,
+            'count' => $cartModel->getTotalItems(),
+            'costoTotal' => $this->getCartTotal()
+        ];
+    }
     // Helper function to get product
     private function getProduct($productId) {
         $stmt = $this->db->prepare("SELECT * FROM productos WHERE id = ?");
         $stmt->execute([$productId]);
         return $stmt->fetch();
+    }
+    public function cart_order($orderData) {
+        try {
+            $this->db->beginTransaction();
+    
+            // 1. Crea orden
+            $orderId = $this->createMainOrder($orderData);
+            
+            // 2. crea objetos de producto en orden
+            $itemsCreated = $this->createOrderItems($orderId, $orderData['items']);
+            
+            // 3.limpia carrito una vez competado
+            $cartCleared = $this->cleanCart();
+    
+            $this->db->commit();
+            
+            return [
+                'success' => true,
+                'orderId' => $orderId,
+                'message' => 'Pedido creado y carrito vaciado'
+            ];
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            error_log("Order creation failed: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al procesar el pedido'
+            ];
+        }
+    }
+    
+    private function createMainOrder($orderData) {
+        $stmt = $this->db->prepare("
+            INSERT INTO ordenes 
+            (id_usuario, total, tipo_entrega, direccion_entrega)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $orderData['id_usuario'],
+            $orderData['total'],
+            $orderData['tipo_entrega'],
+            $orderData['direccion_entrega']
+        ]);
+        return $this->db->lastInsertId();
+    }
+    
+    private function createOrderItems($orderId, $items) {
+        $stmt = $this->db->prepare("
+            INSERT INTO pedido
+            (id_pedido, id_usuario, id_producto, cantidad, precio_unitario)
+            VALUES (?, ?, ?, ?, ?)
+        ");
+    
+        foreach ($items as $item) {
+            $stmt->execute([
+                $orderId,
+                $item['id_usuario'],
+                $item['id_producto'],
+                $item['cantidad'],
+                $item['precio_unitario']
+            ]);
+        }
+        return true;
     }
     
 }

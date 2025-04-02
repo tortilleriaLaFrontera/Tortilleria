@@ -29,6 +29,12 @@ $action = $_GET['action'] ?? '';
 
 // Enrutamiento básico
 switch($action) {
+    case 'userInfo':
+        $usrData = $userController->getSessionInfo($_SESSION['user_id']);
+
+        header('Content-Type: application/json');
+        echo json_encode($usrData);
+        exit();
     case 'register':
         // Navegar a pagina registro o enviar form
         $userController->register();
@@ -64,14 +70,14 @@ switch($action) {
         $homeController->perfil();
         break;
     case 'checkout':
-        // Navegar a pagina perfil - orden
+        // Navegar a pagina perfil - ver estado de orden
         $homeController->checkout();
         break;
     case 'cartdetails':
-        // Navegar a pagina perfil - orden
+        // Navegar a pagina perfil - cart details y creacion de orden
         $homeController->cartdetails();
         break;
-    case 'cart_view':
+   case 'cart_view':
         checkForUser($userController);
         $cartData = $cartController->getCart(true);
         
@@ -99,20 +105,14 @@ switch($action) {
             $homeController->index();
         }
         break;
-    case 'cart': 
+    // solicita JSON de carrito sin crear view
+    case 'cart':
         checkForUser($userController);
-        $cartItems = $cartController->getCart()['items'];
-
-        // Check if it's an AJAX request and return JSON if needed
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            ob_start();
-            include './views/cart.php';
-            sendJsonResponse(['cartHtml' => ob_get_clean()]);
-        }
-
-        include './views/templates/header.php';
-        include './views/cart.php';
-        include './views/templates/footer.php';
+        $cartData = $cartController->getCart(true); // ['success','items','count(por ahora)']
+        
+        // Directly return JSON without output buffering
+        header('Content-Type: application/json');
+        echo json_encode($cartData);
         exit();
     case 'view_cart':  // endpoint para carrito en perfil
         checkForUser($userController);
@@ -145,7 +145,34 @@ switch($action) {
         include './view/cart.php';
         sendJsonResponse(['cartHtml' => ob_get_clean()]);
         exit();
+    case 'cart_decrease':
+    case 'cart_increase':
+        checkForUser($userController);
         
+        // Validate input
+        $cartItemId = $_POST['cart_id'] ?? null;
+        if (!is_numeric($cartItemId) || $cartItemId <= 0) {
+            sendJsonResponse([
+                'success' => false,
+                'message' => 'ID de artículo inválido'
+            ]);
+            exit();
+        }
+    
+        // Determine offset (-1 for decrease, 1 for increase)
+        $offset = ($action === 'cart_increase') ? 1 : -1;
+        
+        // Update quantity
+        $result = $cartController->updateCantidad($cartItemId, $offset);
+        
+        // If successful, get updated cart totals
+        if ($result['success']) {
+            $result['total'] = $cartController->getCartTotal();
+            $result['count'] = $cartController->getCartCount($userId);
+        }
+        
+        sendJsonResponse($result);
+        exit();   
 
     case 'cart_remove':
         checkForUser($userController);
@@ -203,103 +230,51 @@ switch($action) {
         sendJsonResponse($response);
         
         exit();
-
-        case 'create_order':
-            checkForUser($userController);
+    case 'view_cart_full':
+        checkForUser($userController);
+        $cartData = $cartController->getCartFull();  
+        
+        sendJsonResponse([
+            'success' => $cartData['success'],
+            'items' => $cartData['items'],
+            'count' => $cartData['count'],
+            'costoTotal' => $cartData['costoTotal']
+        ]);
+        break;
+    case 'create_order':
+        checkForUser($userController);
+        
+        try {
+            // Get JSON data from frontend
+            $rawData = file_get_contents('php://input');
+            $orderData = json_decode($rawData, true);
             
-            $json = file_get_contents('php://input');
-            $data = json_decode($json, true);
-            
-            try {
-                $db->beginTransaction();
-                
-                // 1. validar que hay producto en el carrito
-                if (empty($data['items'])) {
-                    throw new Exception('El carrito está vacío');
-                }
-        
-                // 2. agarrar los ids de producto
-                $productIds = array_column($data['items'], 'producto_id');
-                if (empty($productIds)) {
-                    throw new Exception('No hay IDs de producto válidos');
-                }
-        
-                // 3. verificar existencia de productos en tabla
-                $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-                $stmt = $db->prepare("
-                    SELECT id, costo FROM productos 
-                    WHERE id IN ($placeholders)
-                ");
-                $stmt->execute($productIds);
-                $validProducts = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-                
-                // 4. checar que no tenga productos invalidos
-                $invalidIds = array_diff($productIds, array_keys($validProducts));
-                if (!empty($invalidIds)) {
-                    throw new Exception("Productos no válidos: " . implode(',', $invalidIds));
-                }
-        
-                // 5. Crear orden
-                $stmt = $db->prepare("
-                    INSERT INTO ordenes (id_usuario, total, tipo_entrega, direccion_entrega)
-                    VALUES (?, ?, ?, ?)
-                ");
-                
-                // Calculate total from valid products
-                $total = 0;
-                foreach ($data['items'] as $item) {
-                    if (isset($validProducts[$item['producto_id']])) {
-                        $total += $validProducts[$item['producto_id']] * $item['cantidad'];
-                    }
-                }
-                
-                $stmt->execute([
-                    $_SESSION['user_id'],
-                    $total,
-                    $data['delivery_type'],
-                    $data['address'] ?? null
-                ]);
-                $orderId = $db->lastInsertId();
-                
-                // 6. Add order items
-                $stmt = $db->prepare("
-                    INSERT INTO pedido (id_pedido, id_usuario, id_producto, cantidad, precio_unitario)
-                    VALUES (?, ?, ?, ?, ?)
-                ");
-                
-                foreach ($data['items'] as $item) {
-                    if (isset($validProducts[$item['producto_id']])) {
-                        $stmt->execute([
-                            $orderId,
-                            $_SESSION['user_id'],
-                            $item['producto_id'],
-                            $item['cantidad'],
-                            $validProducts[$item['producto_id']]
-                        ]);
-                        
-                        // Remove from cart
-                        $stmt = $db->prepare("DELETE FROM carrito WHERE id = ?");
-                        $stmt->execute([$item['cart_id']]);
-                    }
-                }
-                
-                $db->commit();
-                
-                sendJsonResponse([
-                    'success' => true,
-                    'orderId' => $orderId,
-                    'total' => $total
-                ]);
-                
-            } catch (Exception $e) {
-                $db->rollBack();
-                error_log("Order Error: " . $e->getMessage());
-                sendJsonResponse([
+            // Basic validation
+            if (empty($orderData['items']) || !is_numeric($orderData['id_usuario'])) {
+                http_response_code(400);
+                echo json_encode([
                     'success' => false,
-                    'message' => $e->getMessage()
+                    'message' => 'Datos del pedido inválidos'
                 ]);
+                exit();
             }
-            break;
+            
+            // Process order through CartController
+            $result = $cartController->cart_order($orderData);
+            
+            header('Content-Type: application/json');
+            echo json_encode($result);
+            exit();
+            
+        } catch (Exception $e) {
+            error_log("Order creation error: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error interno del servidor'
+            ]);
+            exit();
+        }
     default:
         // lleva al index
         $homeController->index();

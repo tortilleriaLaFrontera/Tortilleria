@@ -6,6 +6,7 @@ class ProfileCartManager {
         }
     }
 
+    // listeners de eventos en botones de productos
     async initCartHandlers() {
         document.addEventListener('click', async (e) => {
             const minusBtn = e.target.closest('.qty-btn.minus');
@@ -63,6 +64,7 @@ class ProfileCartManager {
         }
     }
 
+    //crea estructura de carrito en contenedor -> actualiza la cuenta de productos
     renderCartItems(data) {
         const container = document.querySelector('.cart-container');
         if (!container) return;
@@ -91,7 +93,7 @@ class ProfileCartManager {
         
         this.updateCartCount(data.count);
     }
-
+    //llama al enrutador para acciones de carrito -> si success? espera [success,count,total] si no [success,message]
     async updateCartItem(action, cartId) {
         try {
             const response = await fetch(`index.php?action=${action}`, {
@@ -121,6 +123,7 @@ class ProfileCartManager {
         }
     }
 
+    //afecta todo lo que tenga cart-count
     updateCartCount(count) {
         document.querySelectorAll('.cart-count').forEach(el => {
             el.textContent = count || 0;
@@ -140,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#canasta-tab')) {
         new ProfileCartManager();
     }
+
+
     // Show/hide address field based on delivery type
     document.querySelectorAll('input[name="delivery_type"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -157,8 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
         generateBtn.textContent = 'Procesando...';
         
         try {
-            // Get cart data
-            const cartResponse = await fetch('index.php?action=view_cart', {
+            // 1. Recibir datos de usuario
+            const userResponse = await fetch('index.php?action=userInfo', {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+            const usrData = await userResponse.json(); if (!usrData.success) { throw new Error('Los datos de usuario no fueron recibidos'); }
+            
+            // 2. recibir datos de carrito y de producto
+            const cartResponse = await fetch('index.php?action=view_cart_full', {  
                 headers: { "X-Requested-With": "XMLHttpRequest" }
             });
             const cartData = await cartResponse.json();
@@ -167,21 +178,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('El carrito está vacío');
             }
     
-            // Prepare order data - USE producto_id NOT id!
+            // 3. Prepare order data with ALL required fields
             const formData = new FormData(this);
             const orderData = {
-                delivery_type: formData.get('delivery_type'),
-                address: formData.get('delivery_type') === 'envio' 
-                       ? formData.get('address') 
-                       : null,
+                id_usuario: usrData.data.id,
+                total: cartData.costoTotal,
+                tipo_entrega: formData.get('delivery_type'),
+                direccion_entrega: formData.get('delivery_type') === 'envio' //es envio?
+                        ? formData.get('address').length > 0 //envio y length?
+                            ? formData.get('address') : usrData.data.direccion //envio y length y truthy? 
+                                ? usrData.data.direccion //envio, !length y falsy?
+                                    : null //envio,!length y falsy = nulo
+                                    : null, //!envio == nulo
                 items: cartData.items.map(item => ({
-                    cart_id: item.id,        // The cart item ID (25, 27)
-                    product_id: item.producto_id,  // The actual product ID (2, 3)
-                    cantidad: item.cantidad
+                    cart_id: item.id,           
+                    id_producto: item.producto_id,
+                    id_usuario: item.user_id,      
+                    cantidad: item.cantidad,
+                    precio_unitario: item.costo
                 }))
             };
-    
-            // Submit order
+            
+            // 4. Submit order
             const response = await fetch('index.php?action=create_order', {
                 method: 'POST',
                 headers: {
@@ -195,13 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (result.success) {
                 alert(`Pedido #${result.orderId} creado!`);
-                window.location.href = 'index.php?action=perfil';
+                window.location.href = 'index.php?action=checkout';
             } else {
                 throw new Error(result.message || 'Error al generar pedido');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert(error.message);
+            console.error('Order error:', error);
+            alert('Error: ' + error.message);
         } finally {
             generateBtn.disabled = false;
             generateBtn.textContent = 'Generar Pedido';

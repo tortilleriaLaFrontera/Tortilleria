@@ -78,5 +78,14 @@ class User {
         
         return false;
     }
+    public function getUsr($id) {
+        $stmt = $this->conn->prepare("
+            SELECT id, username, email, direccion, telefono
+            FROM users
+            WHERE id = ?
+        ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>

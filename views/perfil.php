@@ -53,7 +53,7 @@
         </div>
         <nav class="user-nav">
             <button class="nav-button" onclick="location.href='index.php?action=cartdetails'">Canasta</button>
-            <button class="nav-button" onclick="location.href='index.php?action=pedidos'">Pedidos</button>
+            <button class="nav-button" onclick="location.href='index.php?action=checkout'">Pedidos</button>
             <button class="nav-button" onclick="location.href='index.php?action=perfil'">Información de usuario</button>
         </nav>
     </div>

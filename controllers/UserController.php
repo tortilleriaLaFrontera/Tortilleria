@@ -146,5 +146,14 @@ class UserController {
         header("Location: index.php");
         exit;
     }
+
+    public function getSessionInfo($idUsr) {
+        $userData = $this->user->getUsr($idUsr);
+        return [
+            'success' => !empty($userData),
+            'data' => $userData ?: null,
+            'message' => empty($userData) ? 'No se encontro el usuario' : ''
+        ];
+    }
 }
 ?>
