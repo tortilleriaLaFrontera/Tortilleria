@@ -65,11 +65,15 @@ class HomeController {
         $currentPage = 'perfil';
         $currentWindow = 'carrito';
         
+        global $cartController;
+        $cartData = $cartController->getCart(false); // false for full page render
         
-
+        // Extract needed data for the view
+        $cartItems = $cartData['items'] ?? [];
+        $cartTotal = $cartController->getCartTotal();
         
         include_once './views/templates/header.php';
-        include_once './views/perfil.php';
+        include_once './views/perfil.php'; // Main container
         include_once './views/templates/footer.php';
     }
     public function showRegisterForm() {

@@ -114,16 +114,19 @@ switch($action) {
         include './views/cart.php';
         include './views/templates/footer.php';
         exit();
-    case 'view_cart': // Utiliza ambos para compatibilidad
+    case 'view_cart':  // Dedicated endpoint for profile page cart
         checkForUser($userController);
         $cartData = $cartController->getCart(true);
+        
         if ($cartData['success']) {
-            $cartItems = $cartData['items'];
-            include_once './views/templates/header.php';
-            include_once './views/cart.php'; // Full view
-            include_once './views/templates/footer.php';
+            sendJsonResponse([
+                'success' => true,
+                'items' => $cartData['items'],
+                'count' => $cartData['count'],
+                'total' => $cartController->getCartTotal()
+            ]);
         } else {
-            $homeController->index();
+            sendJsonResponse(['success' => false, 'message' => 'Error loading cart']);
         }
         break;
 

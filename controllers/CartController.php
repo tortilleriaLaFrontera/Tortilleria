@@ -138,4 +138,5 @@ class CartController {
         $stmt->execute([$productId]);
         return $stmt->fetch();
     }
+    
 }
