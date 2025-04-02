@@ -1,23 +1,27 @@
-/* Main container styles */
+/* Main container - set fixed height */
 .perfil-main {
     background-color: var(--transparent-box-clr);
     display: flex;
     border-radius: 15px;
     width: 80%;
-    margin: 1.5rem;
+    height: 80vh; /* Fixed viewport height */
+    margin: 1.5rem auto; /* Centered */
     padding: 0.7rem;
     border: 1px solid rgba(245, 245, 245, 0.8);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevent internal overflow */
 }
 
-/* Left section (70% width) */
+/* Left section - now with column layout */
 .perfil-left {
     flex: 0 0 70%;
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(245, 245, 245, 0.8);
     padding: 1rem;
+    min-height: 0; /* Crucial for flex children */
 }
+
 /* Checkout section */
 .checkout-step {
     display: none;
@@ -36,33 +40,37 @@
     margin-top: 20px;
 }
 
-/* Right section (30% width) */
+/* Right section - also column layout */
 .perfil-right {
     flex: 0 0 30%;
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    min-height: 0; /* Important for flex */
 }
 
-/* Left header section */
+/* Left header - fixed height */
 .perfil-left-head {
-    flex: 0 0 5%;
+    flex: 0 0 auto; /* Don't grow */
     margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(245, 245, 245, 0.5);
 }
 
-/* Left body container */
+/* Left body container - now flex-grow with min-height */
 .perfil-left-body {
-    flex: 1;
+    flex: 1; /* Take remaining space */
     display: flex;
+    min-height: 0; /* Crucial for scrolling */
+    overflow: hidden; /* Contain the scrolling */
 }
 
-/* Left body content (80% width) */
+/* Content area - now properly scrollable */
 .left-body-content {
-    flex: 0 0 100%;
+    flex: 1;
     overflow-y: auto;
-    max-height: calc(90% - 1em);
     padding-right: 1rem;
+    padding-bottom: 1rem; /* Space at bottom */
 }
 
 .content-row {
@@ -132,12 +140,21 @@
     flex: 1;
     margin-bottom: 1rem;
 }
+/* Add these to prevent form elements from overflowing */
+.profile-form {
+    max-width: 100%;
+    box-sizing: border-box;
+}
 
+.form-group input, .form-group textarea, .form-group select {
+    max-width: 100%;
+    box-sizing: border-box;
+}
 .edit-profile {
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
-    background-color: rgba(245, 245, 245, 0.3);
+    background-color: rgba(245, 245, 245, 0.5);
     border: 1px solid rgba(245, 245, 245, 0.8);
     border-radius: 5px;
     cursor: pointer;

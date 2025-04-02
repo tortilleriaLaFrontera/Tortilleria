@@ -1,3 +1,21 @@
+/* Checkout section */
+.checkout-step {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.checkout-step.active {
+    display: block;
+}
+
+.checkout-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
 .orders-container {
     padding: 1rem;
 }
@@ -10,7 +28,7 @@
 }
 
 .order-card {
-    background-color: rgba(245, 245, 245, 0.2);
+    background-color: rgba(245, 245, 245, 0.4);
     border-radius: 8px;
     border: 1px solid rgba(245, 245, 245, 0.5);
     margin-bottom: 1.5rem;
