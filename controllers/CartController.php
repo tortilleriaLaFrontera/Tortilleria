@@ -211,5 +211,73 @@ class CartController {
         }
         return true;
     }
-    
+    public function getUserOrders($userId) {
+        try {
+            // Get all orders with their items and product details
+            $stmt = $this->db->prepare("
+                SELECT 
+                    o.id,
+                    o.created_at,
+                    o.total,
+                    o.estado,
+                    o.tipo_entrega,
+                    o.direccion_entrega,
+                    p.id AS product_id,
+                    p.nombre AS product_name,
+                    p.imagen AS product_image,
+                    pd.cantidad,
+                    pd.precio_unitario
+                FROM 
+                    ordenes o
+                JOIN 
+                    pedido pd ON o.id = pd.id_pedido
+                JOIN 
+                    productos p ON pd.id_producto = p.id
+                WHERE 
+                    o.id_usuario = ?
+                ORDER BY 
+                    o.created_at DESC, o.id
+            ");
+            $stmt->execute([$userId]);
+            
+            $orders = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $orderId = $row['id'];
+                
+                // Initialize order if not exists
+                if (!isset($orders[$orderId])) {
+                    $orders[$orderId] = [
+                        'id' => $orderId,
+                        'created_at' => $row['created_at'],
+                        'total' => $row['total'],
+                        'estado' => $row['estado'],
+                        'tipo_entrega' => $row['tipo_entrega'],
+                        'direccion_entrega' => $row['direccion_entrega'],
+                        'items' => []
+                    ];
+                }
+                
+                // Add product to order
+                $orders[$orderId]['items'][] = [
+                    'id_producto' => $row['product_id'],
+                    'nombre' => $row['product_name'],
+                    'imagen' => $row['product_image'],
+                    'cantidad' => $row['cantidad'],
+                    'precio_unitario' => $row['precio_unitario']
+                ];
+            }
+            
+            return [
+                'success' => true,
+                'orders' => array_values($orders) // Convert associative to indexed array
+            ];
+            
+        } catch (PDOException $e) {
+            error_log("Error fetching orders: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al obtener los pedidos'
+            ];
+        }
+    }
 }

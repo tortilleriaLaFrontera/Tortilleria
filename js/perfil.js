@@ -3,6 +3,7 @@ class ProfileCartManager {
         if (document.querySelector('#canasta-tab')) {
             this.initCartHandlers();
             this.loadCartDetails();
+            this.formControl();
         }
     }
 
@@ -136,95 +137,211 @@ class ProfileCartManager {
             totalElement.textContent = `Total: $${total?.toFixed(2) || '0.00'} MXN`;
         }
     }
+    formControl(){
+        // Show/hide address field based on delivery type
+        document.querySelectorAll('input[name="delivery_type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('deliveryNotes').style.display = 
+                    this.value === 'envio' ? 'block' : 'none';
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const generateBtn = document.getElementById('generateOrderBtn');
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Procesando...';
+            
+            try {
+                // 1. Recibir datos de usuario
+                const userResponse = await fetch('index.php?action=userInfo', {
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                });
+                const usrData = await userResponse.json(); if (!usrData.success) { throw new Error('Los datos de usuario no fueron recibidos'); }
+                
+                // 2. recibir datos de carrito y de producto
+                const cartResponse = await fetch('index.php?action=view_cart_full', {  
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                });
+                const cartData = await cartResponse.json();
+                
+                if (!cartData.success || !cartData.items?.length) {
+                    throw new Error('El carrito está vacío');
+                }
+        
+                // 3. Prepare order data with ALL required fields
+                const formData = new FormData(this);
+                const orderData = {
+                    id_usuario: usrData.data.id,
+                    total: cartData.costoTotal,
+                    tipo_entrega: formData.get('delivery_type'),
+                    direccion_entrega: formData.get('delivery_type') === 'envio' //es envio?
+                            ? formData.get('address').length > 0 //envio y length?
+                                ? formData.get('address') : usrData.data.direccion //envio y length y truthy? 
+                                    ? usrData.data.direccion //envio, !length y falsy?
+                                        : null //envio,!length y falsy = nulo
+                                        : null, //!envio == nulo
+                    items: cartData.items.map(item => ({
+                        cart_id: item.id,           
+                        id_producto: item.producto_id,
+                        id_usuario: item.user_id,      
+                        cantidad: item.cantidad,
+                        precio_unitario: item.costo
+                    }))
+                };
+                
+                // 4. Submit order
+                const response = await fetch('index.php?action=create_order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+        
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`Pedido #${result.orderId} creado!`);
+                    window.location.href = 'index.php?action=checkout';
+                } else {
+                    throw new Error(result.message || 'Error al generar pedido');
+                }
+            } catch (error) {
+                console.error('Order error:', error);
+                alert('Error: ' + error.message);
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generar Pedido';
+            }
+        });
+    }
+    
+}
+class ProfileOrdersManager {
+    constructor() {
+        this.ordersContainer = document.querySelector('.orders-container');
+        this.init();
+    }
+
+    async init() {
+        await this.loadOrders();
+    }
+
+    async loadOrders() {
+        try {
+            const response = await fetch('index.php?action=getOrders', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.renderOrders(data.orders);
+            } else {
+                this.showErrorMessage(data.message || 'Error al cargar los pedidos');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            this.showErrorMessage('Error de conexión');
+        }
+    }
+
+    renderOrders(orders) {
+        // Clear existing content
+        this.ordersContainer.innerHTML = '';
+        
+        if (!orders || orders.length === 0) {
+            this.ordersContainer.innerHTML = `
+                <div class="no-orders-message">
+                    <p>No existe registro de órdenes del usuario</p>
+                </div>
+            `;
+            return;
+        }
+        
+        orders.forEach(order => {
+            const orderElement = this.createOrderElement(order);
+            this.ordersContainer.appendChild(orderElement);
+        });
+    }
+
+    createOrderElement(order) {
+        const orderElement = document.createElement('div');
+        orderElement.className = 'order-card';
+        
+        // Format date
+        const orderDate = new Date(order.created_at);
+        const formattedDate = orderDate.toLocaleDateString('es-MX', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Create order HTML
+        orderElement.innerHTML = `
+            <div class="order-header">
+                <div class="order-number">#${order.id.toString().padStart(5, '0')}</div>
+                <div class="order-date">${formattedDate}</div>
+                <div class="order-status ${order.estado.toLowerCase().replace(' ', '-')}">
+                    ${order.estado}
+                </div>
+            </div>
+            
+            <div class="order-products">
+                ${order.items.map(item => `
+                    <div class="product-row">
+                        <span class="product-name">${item.nombre}</span>
+                        <span class="product-quantity">x${item.cantidad}</span>
+                        <span class="product-price">$${(parseFloat(item.precio_unitario) || 0).toFixed(2)}</span>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="order-footer">
+                <div class="order-total">
+                    Total: <span>$${(parseFloat(order.total) || 0).toFixed(2)}</span>
+                </div>
+                <div class="order-delivery">
+                    ${order.tipo_entrega === 'envio' ? 'Envío a domicilio' : 'Recoger en tienda'}
+                </div>
+            </div>
+        `;
+        
+        return orderElement;
+    }
+
+    showErrorMessage(message) {
+        this.ordersContainer.innerHTML = `
+            <div class="error-message">
+                <p>${message}</p>
+                <button class="retry-button">Reintentar</button>
+            </div>
+        `;
+        
+        // Add retry functionality
+        this.ordersContainer.querySelector('.retry-button')?.addEventListener('click', () => {
+            this.loadOrders();
+        });
+    }
 }
 
-// Initialize when profile page loads
+
+// Initializa clases al cargar
 document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#canasta-tab')) {
         new ProfileCartManager();
     }
-
-
-    // Show/hide address field based on delivery type
-    document.querySelectorAll('input[name="delivery_type"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            document.getElementById('deliveryNotes').style.display = 
-                this.value === 'envio' ? 'block' : 'none';
-        });
-    });
-
-    // Handle form submission
-    document.getElementById('orderForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const generateBtn = document.getElementById('generateOrderBtn');
-        generateBtn.disabled = true;
-        generateBtn.textContent = 'Procesando...';
-        
-        try {
-            // 1. Recibir datos de usuario
-            const userResponse = await fetch('index.php?action=userInfo', {
-                headers: { "X-Requested-With": "XMLHttpRequest" }
-            });
-            const usrData = await userResponse.json(); if (!usrData.success) { throw new Error('Los datos de usuario no fueron recibidos'); }
-            
-            // 2. recibir datos de carrito y de producto
-            const cartResponse = await fetch('index.php?action=view_cart_full', {  
-                headers: { "X-Requested-With": "XMLHttpRequest" }
-            });
-            const cartData = await cartResponse.json();
-            
-            if (!cartData.success || !cartData.items?.length) {
-                throw new Error('El carrito está vacío');
-            }
-    
-            // 3. Prepare order data with ALL required fields
-            const formData = new FormData(this);
-            const orderData = {
-                id_usuario: usrData.data.id,
-                total: cartData.costoTotal,
-                tipo_entrega: formData.get('delivery_type'),
-                direccion_entrega: formData.get('delivery_type') === 'envio' //es envio?
-                        ? formData.get('address').length > 0 //envio y length?
-                            ? formData.get('address') : usrData.data.direccion //envio y length y truthy? 
-                                ? usrData.data.direccion //envio, !length y falsy?
-                                    : null //envio,!length y falsy = nulo
-                                    : null, //!envio == nulo
-                items: cartData.items.map(item => ({
-                    cart_id: item.id,           
-                    id_producto: item.producto_id,
-                    id_usuario: item.user_id,      
-                    cantidad: item.cantidad,
-                    precio_unitario: item.costo
-                }))
-            };
-            
-            // 4. Submit order
-            const response = await fetch('index.php?action=create_order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(orderData)
-            });
-    
-            const result = await response.json();
-            
-            if (result.success) {
-                alert(`Pedido #${result.orderId} creado!`);
-                window.location.href = 'index.php?action=checkout';
-            } else {
-                throw new Error(result.message || 'Error al generar pedido');
-            }
-        } catch (error) {
-            console.error('Order error:', error);
-            alert('Error: ' + error.message);
-        } finally {
-            generateBtn.disabled = false;
-            generateBtn.textContent = 'Generar Pedido';
-        }
-    });
+    if (document.querySelector('.orders-container')) {
+        new ProfileOrdersManager();
+    }
 });
 
 

@@ -1,0 +1,146 @@
+.orders-container {
+    padding: 1rem;
+}
+
+.no-orders-message {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 1.1rem;
+}
+
+.order-card {
+    background-color: rgba(245, 245, 245, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(245, 245, 245, 0.5);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(245, 245, 245, 0.3);
+    border-bottom: 1px solid rgba(245, 245, 245, 0.5);
+}
+
+.order-number {
+    font-weight: bold;
+    color: var(--primary-clr);
+}
+
+.order-date {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9rem;
+}
+
+.order-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.order-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Processing - Initial state */
+.order-status.solicitado {
+    background-color: #FFF3CD;
+    color: #856404;
+    border: 1px solid #FFEEBA;
+}
+
+/* Preparing - Items being gathered */
+.order-status.preparando {
+    background-color: #E2F0FD;
+    color: #0C63E4;
+    border: 1px solid #B8DAFF;
+}
+
+/* Ready - Prepared for pickup/shipping */
+.order-status.listo {
+    background-color: #D1E7DD;
+    color: #0F5132;
+    border: 1px solid #BADBCC;
+}
+
+/* On the way - For deliveries */
+.order-status.en-camino {
+    background-color: #CFF4FC;
+    color: #055160;
+    border: 1px solid #B6EFFB;
+}
+
+/* Completed - Order fulfilled */
+.order-status.completado {
+    background-color: #D1E7DD;
+    color: #0F5132;
+    border: 1px solid #BADBCC;
+}
+
+/* Cancelled - Order cancelled */
+.order-status.cancelado {
+    background-color: #F8D7DA;
+    color: #721C24;
+    border: 1px solid #F1AEB5;
+}
+
+.order-products {
+    padding: 0.5rem 1rem;
+}
+
+.product-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(245, 245, 245, 0.3);
+}
+
+.product-row:last-child {
+    border-bottom: none;
+}
+
+.product-name {
+    flex: 2;
+}
+
+.product-quantity {
+    flex: 1;
+    text-align: center;
+}
+
+.product-price {
+    flex: 1;
+    text-align: right;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(245, 245, 245, 0.1);
+    border-top: 1px solid rgba(245, 245, 245, 0.3);
+}
+
+.order-total {
+    font-weight: bold;
+}
+
+.order-total span {
+    color: var(--primary-clr);
+}
+
+.order-delivery {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.6);
+}

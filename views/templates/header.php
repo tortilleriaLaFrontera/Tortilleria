@@ -82,7 +82,6 @@
                                         <img class="userBtns" src="img/cart.png" alt="cart">
                                         <span class="cart-count">
                                             <?php 
-                                                // TEMPORAL PARA DESARROLLO
                                                 if(isset($cartController)) {
                                                     echo $cartController->getCartCount($_SESSION['user_id']);
                                                 } else {

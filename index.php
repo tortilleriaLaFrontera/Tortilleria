@@ -275,6 +275,20 @@ switch($action) {
             ]);
             exit();
         }
+    case 'getOrders':
+        checkForUser($userController);
+        $userId = $_SESSION['user_id'] ?? null;
+        
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Usuario no autenticado']);
+            exit();
+        }
+        
+        $response = $cartController->getUserOrders($userId);
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     default:
         // lleva al index
         $homeController->index();

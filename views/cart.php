@@ -37,7 +37,7 @@ $isDropdown = $isDropdown ?? false;
                 <div class="cart-total">
                     Total: $<?= number_format($cartController->getCartTotal(), 2) ?>
                 </div>
-                <a href="index.php?action=checkout" class="checkout-btn">Proceder al Pago</a>
+                <a href="index.php?action=cartdetails" class="checkout-btn">Proceder al Pago</a>
             <?php endif; ?>
         </div>
     <?php endif; ?>
