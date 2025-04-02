@@ -332,7 +332,150 @@ class ProfileOrdersManager {
         });
     }
 }
+class ProfileUserManager {
+    constructor() {
+        this.userForm = document.getElementById('userProfileForm');
+        this.rightSideUsername = document.querySelector('.user-name p');
+        this.rightSideDetails = document.querySelectorAll('.detail-item');
+        this.init();
+    }
 
+    async init() {
+        await this.loadUserInfo();
+        this.setupEventListeners();
+    }
+
+    async loadUserInfo() {
+        try {
+            const response = await fetch('index.php?action=getUserInfo', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateAllUserDisplays(data.data);
+            } else {
+                this.showErrorMessage(data.message || 'Error al cargar información del usuario');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            this.showErrorMessage('Error de conexión');
+        }
+    }
+
+    updateAllUserDisplays(userData) {
+        // Update form fields
+        if (this.userForm) {
+            this.userForm.username.value = userData.username || '';
+            this.userForm.direccion.value = userData.direccion || '';
+            this.userForm.telefono.value = userData.telefono || '';
+        }
+        
+        // Update right sidebar
+        if (this.rightSideUsername) {
+            this.rightSideUsername.textContent = userData.username || 'Nombre del Usuario';
+        }
+        
+        if (this.rightSideDetails.length >= 3) {
+            this.rightSideDetails[0].textContent = userData.email || 'user@example.com';
+            this.rightSideDetails[1].textContent = userData.telefono || '+52 55 1234 5678';
+            this.rightSideDetails[2].textContent = userData.direccion || 'Calle Falsa 123, Col. Centro, CDMX';
+        }
+    }
+
+    setupEventListeners() {
+        if (this.userForm) {
+            this.userForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.handleFormSubmit();
+            });
+            
+            // Cancel button handler
+            const cancelBtn = this.userForm.querySelector('.cancel-btn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    this.loadUserInfo(); // Reset form to current values
+                });
+            }
+        }
+    }
+
+    async handleFormSubmit() {
+        const formData = {
+            username: this.userForm.username.value.trim(),
+            direccion: this.userForm.direccion.value.trim(),
+            telefono: this.userForm.telefono.value.trim(),
+            current_password: this.userForm.current_password.value,
+            new_password: this.userForm.new_password.value,
+            confirm_password: this.userForm.confirm_password.value
+        };
+
+        // Basic client-side validation
+        if (formData.new_password && formData.new_password !== formData.confirm_password) {
+            this.showErrorMessage('Las contraseñas no coinciden');
+            return;
+        }
+
+        try {
+            const response = await fetch('index.php?action=updateUserInfo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.showSuccessMessage(data.message || 'Información actualizada correctamente');
+                this.updateAllUserDisplays(data.user || data.data);
+                this.userForm.current_password.value = '';
+                this.userForm.new_password.value = '';
+                this.userForm.confirm_password.value = '';
+            } else {
+                this.showErrorMessage(data.message || 'Error al actualizar la información');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            this.showErrorMessage('Error de conexión');
+        }
+    }
+
+    showSuccessMessage(message) {
+        // Remove any existing messages
+        this.removeMessages();
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'success-message';
+        messageDiv.textContent = message;
+        this.userForm.prepend(messageDiv);
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 5000);
+    }
+
+    showErrorMessage(message) {
+        // Remove any existing messages
+        this.removeMessages();
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'error-message';
+        messageDiv.textContent = message;
+        this.userForm.prepend(messageDiv);
+    }
+
+    removeMessages() {
+        const existingMessages = this.userForm.querySelectorAll('.error-message, .success-message');
+        existingMessages.forEach(msg => msg.remove());
+    }
+}
 
 // Initializa clases al cargar
 document.addEventListener('DOMContentLoaded', () => {
@@ -341,6 +484,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (document.querySelector('.orders-container')) {
         new ProfileOrdersManager();
+    }
+    if (document.getElementById('userProfileForm')) {
+        new ProfileUserManager();
     }
 });
 

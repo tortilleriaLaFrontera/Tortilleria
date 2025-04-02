@@ -35,6 +35,23 @@ switch($action) {
         header('Content-Type: application/json');
         echo json_encode($usrData);
         exit();
+    case 'getUserInfo':
+        checkForUser($userController);
+        $userId = $_SESSION['user_id'] ?? null;
+        $response = $userController->getSessionInfo($userId);
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    case 'updateUserInfo':
+        checkForUser($userController);
+        $userId = $_SESSION['user_id'] ?? null;
+        $rawData = file_get_contents('php://input');
+        $userData = json_decode($rawData, true);
+        
+        $response = $userController->updateUserInfo($userId, $userData);
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     case 'register':
         // Navegar a pagina registro o enviar form
         $userController->register();

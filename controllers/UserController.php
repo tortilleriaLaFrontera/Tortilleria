@@ -155,5 +155,81 @@ class UserController {
             'message' => empty($userData) ? 'No se encontro el usuario' : ''
         ];
     }
+    public function updateUserInfo($userId, $userData) {
+        try {
+            // Validate current password if changing password
+            if (!empty($userData['new_password'])) {
+                if (empty($userData['current_password'])) {
+                    return ['success' => false, 'message' => 'Debe ingresar la contraseña actual'];
+                }
+                
+                $user = $this->getUserById($userId);
+                if (!password_verify($userData['current_password'], $user['password'])) {
+                    return ['success' => false, 'message' => 'Contraseña actual incorrecta'];
+                }
+                
+                if ($userData['new_password'] !== $userData['confirm_password']) {
+                    return ['success' => false, 'message' => 'Las contraseñas no coinciden'];
+                }
+            }
+            
+            // Build update query
+            $updates = [];
+            $params = [];
+            
+            if (!empty($userData['username'])) {
+                $updates[] = 'username = ?';
+                $params[] = $userData['username'];
+            }
+            
+            if (!empty($userData['direccion'])) {
+                $updates[] = 'direccion = ?';
+                $params[] = $userData['direccion'];
+            }
+            
+            if (!empty($userData['telefono'])) {
+                $updates[] = 'telefono = ?';
+                $params[] = $userData['telefono'];
+            }
+            
+            if (!empty($userData['new_password'])) {
+                $updates[] = 'password = ?';
+                $params[] = password_hash($userData['new_password'], PASSWORD_DEFAULT);
+            }
+            
+            if (empty($updates)) {
+                return ['success' => false, 'message' => 'No se proporcionaron datos para actualizar'];
+            }
+            
+            $params[] = $userId; // For WHERE clause
+            
+            $stmt = $this->db->prepare("
+                UPDATE users 
+                SET " . implode(', ', $updates) . " 
+                WHERE id = ?
+            ");
+            $stmt->execute($params);
+            
+            // Return updated user data
+            return [
+                'success' => true,
+                'message' => 'Información actualizada correctamente',
+                'user' => $this->getUserById($userId)
+            ];
+            
+        } catch (PDOException $e) {
+            error_log("Error updating user: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Error al actualizar la información'];
+        }
+    }
+    private function getUserById($userId) {
+        $stmt = $this->db->prepare("
+            SELECT id, username, email, direccion, telefono, password 
+            FROM users 
+            WHERE id = ?
+        ");
+        $stmt->execute([$userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>

@@ -1,9 +1,6 @@
 <?php include_once './views/templates/header.php'; ?>
 <div class="perfil-main">
     <div class="perfil-left">
-        <div class="perfil-left-head">
-            <h2><?php echo $currentWindow ?></h2>
-        </div>
         <div class="perfil-left-body">
             <div class="left-body-content">
                 <?php
