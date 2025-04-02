@@ -114,7 +114,7 @@ switch($action) {
         include './views/cart.php';
         include './views/templates/footer.php';
         exit();
-    case 'view_cart':  // Dedicated endpoint for profile page cart
+    case 'view_cart':  // endpoint para carrito en perfil
         checkForUser($userController);
         $cartData = $cartController->getCart(true);
         
@@ -129,7 +129,7 @@ switch($action) {
             sendJsonResponse(['success' => false, 'message' => 'Error loading cart']);
         }
         break;
-
+    
     case 'cart_update':
     
         checkForUser($userController);
@@ -201,15 +201,105 @@ switch($action) {
         }
         
         sendJsonResponse($response);
-        // // respuesta con carrito actualizado para AJAX
-        // $cartItems = $cartController->getCart()['items'];
-        // ob_start();
-        // include './views/cart.php';
-        // sendJsonResponse([
-        //     'success' => $response['success'],
-        //     'cartHtml' => ob_get_clean()
-        // ]);
+        
         exit();
+
+        case 'create_order':
+            checkForUser($userController);
+            
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+            
+            try {
+                $db->beginTransaction();
+                
+                // 1. validar que hay producto en el carrito
+                if (empty($data['items'])) {
+                    throw new Exception('El carrito está vacío');
+                }
+        
+                // 2. agarrar los ids de producto
+                $productIds = array_column($data['items'], 'producto_id');
+                if (empty($productIds)) {
+                    throw new Exception('No hay IDs de producto válidos');
+                }
+        
+                // 3. verificar existencia de productos en tabla
+                $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+                $stmt = $db->prepare("
+                    SELECT id, costo FROM productos 
+                    WHERE id IN ($placeholders)
+                ");
+                $stmt->execute($productIds);
+                $validProducts = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                
+                // 4. checar que no tenga productos invalidos
+                $invalidIds = array_diff($productIds, array_keys($validProducts));
+                if (!empty($invalidIds)) {
+                    throw new Exception("Productos no válidos: " . implode(',', $invalidIds));
+                }
+        
+                // 5. Crear orden
+                $stmt = $db->prepare("
+                    INSERT INTO ordenes (id_usuario, total, tipo_entrega, direccion_entrega)
+                    VALUES (?, ?, ?, ?)
+                ");
+                
+                // Calculate total from valid products
+                $total = 0;
+                foreach ($data['items'] as $item) {
+                    if (isset($validProducts[$item['producto_id']])) {
+                        $total += $validProducts[$item['producto_id']] * $item['cantidad'];
+                    }
+                }
+                
+                $stmt->execute([
+                    $_SESSION['user_id'],
+                    $total,
+                    $data['delivery_type'],
+                    $data['address'] ?? null
+                ]);
+                $orderId = $db->lastInsertId();
+                
+                // 6. Add order items
+                $stmt = $db->prepare("
+                    INSERT INTO pedido (id_pedido, id_usuario, id_producto, cantidad, precio_unitario)
+                    VALUES (?, ?, ?, ?, ?)
+                ");
+                
+                foreach ($data['items'] as $item) {
+                    if (isset($validProducts[$item['producto_id']])) {
+                        $stmt->execute([
+                            $orderId,
+                            $_SESSION['user_id'],
+                            $item['producto_id'],
+                            $item['cantidad'],
+                            $validProducts[$item['producto_id']]
+                        ]);
+                        
+                        // Remove from cart
+                        $stmt = $db->prepare("DELETE FROM carrito WHERE id = ?");
+                        $stmt->execute([$item['cart_id']]);
+                    }
+                }
+                
+                $db->commit();
+                
+                sendJsonResponse([
+                    'success' => true,
+                    'orderId' => $orderId,
+                    'total' => $total
+                ]);
+                
+            } catch (Exception $e) {
+                $db->rollBack();
+                error_log("Order Error: " . $e->getMessage());
+                sendJsonResponse([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+            break;
     default:
         // lleva al index
         $homeController->index();

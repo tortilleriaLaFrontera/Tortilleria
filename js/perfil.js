@@ -140,4 +140,73 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#canasta-tab')) {
         new ProfileCartManager();
     }
+    // Show/hide address field based on delivery type
+    document.querySelectorAll('input[name="delivery_type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.getElementById('deliveryNotes').style.display = 
+                this.value === 'envio' ? 'block' : 'none';
+        });
+    });
+
+    // Handle form submission
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const generateBtn = document.getElementById('generateOrderBtn');
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Procesando...';
+        
+        try {
+            // Get cart data
+            const cartResponse = await fetch('index.php?action=view_cart', {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+            const cartData = await cartResponse.json();
+            
+            if (!cartData.success || !cartData.items?.length) {
+                throw new Error('El carrito está vacío');
+            }
+    
+            // Prepare order data - USE producto_id NOT id!
+            const formData = new FormData(this);
+            const orderData = {
+                delivery_type: formData.get('delivery_type'),
+                address: formData.get('delivery_type') === 'envio' 
+                       ? formData.get('address') 
+                       : null,
+                items: cartData.items.map(item => ({
+                    cart_id: item.id,        // The cart item ID (25, 27)
+                    product_id: item.producto_id,  // The actual product ID (2, 3)
+                    cantidad: item.cantidad
+                }))
+            };
+    
+            // Submit order
+            const response = await fetch('index.php?action=create_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(orderData)
+            });
+    
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`Pedido #${result.orderId} creado!`);
+                window.location.href = 'index.php?action=perfil';
+            } else {
+                throw new Error(result.message || 'Error al generar pedido');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        } finally {
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generar Pedido';
+        }
+    });
 });
+
+
