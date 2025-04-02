@@ -1,4 +1,44 @@
+class CartManager {
+    constructor() {
+        this.cartCountElement = document.querySelector('.cart-count');
+        this.init();
+    }
+
+    async init() {
+        await this.updateCartCount();
+        // Refresh count every 30 seconds to stay synced
+        setInterval(() => this.updateCartCount(), 30000);
+    }
+
+    async updateCartCount() {
+        try {
+            const response = await fetch('index.php?action=get_cart_count', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            
+            if (!response.ok) throw new Error('Network error');
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.cartCountElement.textContent = data.count;
+                // Update badge visibility
+                if (data.count > 0) {
+                    this.cartCountElement.style.display = 'inline-block';
+                } else {
+                    this.cartCountElement.style.display = 'none';
+                }
+            }
+        } catch (error) {
+            console.error('Failed to update cart count:', error);
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('.cart-count')) {
+        new CartManager();
+    }
     // =====================
     // MENU FUNCTIONS
     // =====================

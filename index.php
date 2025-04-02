@@ -90,6 +90,15 @@ switch($action) {
         // Navegar a pagina perfil - ver estado de orden
         $homeController->checkout();
         break;
+    case 'get_cart_count':
+        // para header
+        if (isset($_SESSION['user_id'])) {
+            $count = $cartController->getCartCount($_SESSION['user_id']);
+            echo json_encode(['success' => true, 'count' => $count]);
+        } else {
+            echo json_encode(['success' => false, 'count' => 0]);
+        }
+        exit();
     case 'cartdetails':
         // Navegar a pagina perfil - cart details y creacion de orden
         $homeController->cartdetails();

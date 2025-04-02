@@ -19,12 +19,12 @@
         </div>
     </div>
     
-    <div class="profile-stats">
+    <!-- <div class="profile-stats">
         <div class="stat-card">
             <div class="stat-value"><?= $userData['active_orders'] ?></div>
             <div class="stat-label">Órdenes activas</div>
         </div>
-    </div>
+    </div> -->
     
     <form class="profile-form" id="userProfileForm">
         <div class="form-group">
